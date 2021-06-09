@@ -45,3 +45,8 @@ Verify Post Updated
 	[Arguments]				${post_id}		${expected_post}
 	${observed_post} = 		Get Post With Id		${post_id}
 	Should Be Equal			${expected_post}		${observed_post}
+
+Update Post
+	[Documentation]			post is a dictionary
+	[Arguments]				${post_id}		${post}
+	PUT		/posts/${post_id}		${post}

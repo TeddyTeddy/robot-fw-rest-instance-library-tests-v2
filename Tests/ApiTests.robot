@@ -3,6 +3,7 @@ Documentation		All test cases are atomic: after the test execution, they must le
 ...					system in the same state before the execution. To accomplish atomic tests,
 ...					the test teardown method Restore Database gets called. This restores the
 ...					backend server's database to initial state before the test execution.
+...					When we talk about the term "resource", we mean the post resource in the server
 Resource			${EXECDIR}${/}Resources${/}Common${/}Common.resource
 Resource			${EXECDIR}${/}Resources${/}Posts.resource
 
@@ -16,15 +17,15 @@ ${MODIFIED_JSON_POST}
 ${NEW_USER_ID}				${2}
 ${NEW_TITLE}				Modified Title
 ${NEW_BODY}					Modified Body
-
+${TAGS}						tag1 tag2 tag3
 
 *** Test Case ***
 Creating Post
 	[Documentation]			Creates a new post with JSON_POST (1) and retrives its id and the new post itself (2)
 	...						A) Checks that (2) contains all the key/value pairs in (1).
 	...						B) With the id, it reads the post once again (3) and compares
-	...						that with (2). They must match exactly.
-	[Tags]		create		read
+	...						(3) with (2). They must match exactly.
+	[Tags]		create-tested		read
 	# test call: create a new post
 	${new_post_id}		${new_post} = 	Create Post		${JSON_POST}
 
@@ -42,7 +43,7 @@ Updating Post UserId
 	...						then makes a PUT request updating the resource in the server.
 	...						Checks that the post resource in the server got updated
 	...						by calling Verify Post Updated
-	[Tags]		create	read	update
+	[Tags]		create	read	update-tested
 	#	prepare the post to be updated
 	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
 
@@ -58,7 +59,7 @@ Updating Post Title
 	...						then makes a PUT request updating the resource in the server.
 	...						Checks that the post resource in the server got updated
 	...						by calling Verify Post Updated
-	[Tags]		create	read	update
+	[Tags]		create	read	update-tested
 	#	prepare the post to be updated
 	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
 
@@ -73,20 +74,285 @@ Updating Post Body
 	...						then makes a PUT request updating the resource in the server.
 	...						Checks that the post resource in the server got updated
 	...						by calling Verify Post Updated
-	[Tags]		create	read	update
+	[Tags]		create	read	update-tested
 	#	prepare the post to be updated
 	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
 
 	# test call: update the post with post_id
+	# expected_post gets its body updated with NEW_BODY
 	Update Post Body				${post_id}		${expected_post}		${NEW_BODY}
 	# expected_post got updated with "body"=${NEW_BODY}
 	Verify Post Updated		${post_id}		${expected_post}
 
 Update Post UserId & Title
-	[Documentation]			TODO: Add documentation
-	[Tags]		create	read	update
+	[Documentation]			Creates a post with JSON_POST (1) and updates its "title" and "userId" items locally
+	...						Then uses the local post to update the one in the server via Update Post keyword.
+	...						Checks that the post resource in the server got updated
+	...						by calling Verify Post Updated
+	[Tags]		create	read	update-tested
 	#	prepare the post to be updated
 	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
 
-	# update the post locally
+	# update expected_post locally
+	Set To Dictionary		${expected_post}		userId=${NEW_USER_ID}
+	Set To Dictionary		${expected_post}		title=${NEW_TITLE}
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Update Post Title & Body
+	[Documentation]			Creates a post with JSON_POST (1) and updates its "title" and "body" items locally
+	...						Then uses the local post to update the one in the server via Update Post keyword.
+	...						Checks that the post resource in the server got updated
+	...						by calling Verify Post Updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Set To Dictionary		${expected_post}		title=${NEW_TITLE}
+	Set To Dictionary		${expected_post}		body=${NEW_BODY}
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Update Post UserId & Body
+	[Documentation]			Creates a post with JSON_POST (1) and updates its "userId" and "body" items locally
+	...						Then uses the local post to update the one in the server via Update Post keyword.
+	...						Checks that the post resource in the server got updated
+	...						by calling Verify Post Updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Set To Dictionary		${expected_post}		userId=${NEW_USER_ID}
+	Set To Dictionary		${expected_post}		body=${NEW_BODY}
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Update All Fields Except Id In Post
+	[Documentation]			Creates a post with JSON_POST (1) and updates its "userId", "title" and "body" items locally
+	...						Then uses the local post to update the one in the server via Update Post keyword.
+	...						Checks that the post resource in the server got updated
+	...						by calling Verify Post Updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Set To Dictionary		${expected_post}		userId=${NEW_USER_ID}
+	Set To Dictionary		${expected_post}		title=${NEW_TITLE}
+	Set To Dictionary		${expected_post}		body=${NEW_BODY}
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Add Additional Tags Field To Post
+	[Documentation]			Creates a post with JSON_POST (1) and adds "tags" field locally
+	...						Then uses the local post to update the one in the server via Update Post keyword.
+	...						Checks that the post resource in the server got updated
+	...						by calling Verify Post Updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Set To Dictionary		${expected_post}		tags=${TAGS}
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Attempt To Remove All Fields Including Id In Post
+	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
+	...						we can erase all fields (except id) by not providing unwanted key/value pairs
+	...						in the provided JSON. For example, if we want to get rid of post title,
+	...						we can provide a JSON with no title field in it. Then PUT request must overwrite
+	...						the resource in the server with the provided JSON resource having no title.
+	...						This test creates a post with JSON_POST (1) and then updates it with
+	...						the one which has no fields. Then test checks that
+	...						the post resource in the server got updated with the id unremoved and the rest
+	...						of the fields are removed.
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Remove From Dictionary		${expected_post}		title
+	Remove From Dictionary		${expected_post}		body
+	Remove From Dictionary		${expected_post}		userId
+	Remove From Dictionary		${expected_post}		id
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: atttempt to update the post resource in the server with an empty JSON
+	Update Post		${post_id}		${expected_post}
+	Run Keyword And Expect Error		{} != {'id': 101}	Verify Post Updated		${post_id}		${expected_post}
+	# update expected_post locally
+	Set To Dictionary			${expected_post}		id=${post_id}
+	# verify that post resource has only id field with post_id value
+	Verify Post Updated		${post_id}		${expected_post}
+
+Remove All Fields Except Id In Post
+	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
+	...						we can erase all fields (except id) by not providing unwanted key/value pairs
+	...						in the provided JSON. For example, if we want to get rid of post title,
+	...						we can provide a JSON with no title field in it. Then PUT request must overwrite
+	...						the resource in the server with the provided JSON resource having no title.
+	...						This test creates a post with JSON_POST (1) and then updates it with
+	...						the one which only have id field. Then test checks that
+	...						the post resource in the server got updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Remove From Dictionary		${expected_post}		title
+	Remove From Dictionary		${expected_post}		body
+	Remove From Dictionary		${expected_post}		userId
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Remove Title From Post
+	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
+	...						we can erase all fields (except id) by not providing unwanted key/value pairs
+	...						in the provided JSON. For example, if we want to get rid of post title,
+	...						we can provide a JSON with no title field in it. Then PUT request must overwrite
+	...						the resource in the server with the provided JSON resource having no title.
+	...						This test creates a post with JSON_POST (1) and then updates it with
+	...						the one which only have title field removed and other fields untouched.
+	...						Then test checks that the post resource in the server got updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Remove From Dictionary		${expected_post}		title
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Remove Body From Post
+	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
+	...						we can erase all fields (except id) by not providing unwanted key/value pairs
+	...						in the provided JSON. For example, if we want to get rid of post body,
+	...						we can provide a JSON with no body field in it. Then PUT request must overwrite
+	...						the resource in the server with the provided JSON resource having no body.
+	...						This test creates a post with JSON_POST (1) and then updates it with
+	...						the one which only have body field removed and the other fields untouched.
+	...						Then test checks that the post resource in the server got updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Remove From Dictionary		${expected_post}		body
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Remove UserId From Post
+	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
+	...						we can erase all fields (except id) by not providing unwanted key/value pairs
+	...						in the provided JSON. For example, if we want to get rid of post userId,
+	...						we can provide a JSON with no userId field in it. Then PUT request must overwrite
+	...						the resource in the server with the provided JSON resource having no userId.
+	...						This test creates a post with JSON_POST (1) and then updates it with
+	...						the one which only have userId field removed and the other fields untouched.
+	...						Then test checks that the post resource in the server got updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Remove From Dictionary		${expected_post}		userId
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Remove Title And Body In Post
+	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
+	...						we can erase all fields (except id) by not providing unwanted key/value pairs
+	...						in the provided JSON. For example, if we want to get rid of post title and body,
+	...						we can provide a JSON with those fields not present. Then PUT request must overwrite
+	...						the resource in the server with the provided JSON resource having no title or body.
+	...						This test creates a post with JSON_POST (1) and then updates the resource with
+	...						the one which doesn't have those fields. Then test checks that
+	...						the post resource in the server got updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Remove From Dictionary		${expected_post}		title
+	Remove From Dictionary		${expected_post}		body
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Remove Title And UserId In Post
+	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
+	...						we can erase all fields (except id) by not providing unwanted key/value pairs
+	...						in the provided JSON. For example, if we want to get rid of post title and userId,
+	...						we can provide a JSON with those fields not present. Then PUT request must overwrite
+	...						the resource in the server with the provided JSON resource having no title or userId.
+	...						This test creates a post with JSON_POST (1) and then updates the resource with
+	...						the one which doesn't have those fields. Then test checks that
+	...						the post resource in the server got updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Remove From Dictionary		${expected_post}		title
+	Remove From Dictionary		${expected_post}		userId
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Remove Body And UserId In Post
+	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
+	...						we can erase all fields (except id) by not providing unwanted key/value pairs
+	...						in the provided JSON. For example, if we want to get rid of post body and userId,
+	...						we can provide a JSON with those fields not present. Then PUT request must overwrite
+	...						the resource in the server with the provided JSON resource having no body or userId.
+	...						This test creates a post with JSON_POST (1) and then updates the resource with
+	...						the one which doesn't have those fields. Then test checks that
+	...						the post resource in the server got updated
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Remove From Dictionary		${expected_post}		body
+	Remove From Dictionary		${expected_post}		userId
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
 
