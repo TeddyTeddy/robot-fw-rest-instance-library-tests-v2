@@ -14,9 +14,9 @@ Restore Database
 	...						in the test cases. Note that JSONSERVER listens to the changes in db.json, it re-starts
 	...						each time db.json is updated.
 	Run			git checkout ${EXECDIR}${/}db.json
-	Sleep		1s			# allow JSONSERVER to reboot itself after db.json file change
+	Sleep		1.5s			# allow JSONSERVER to reboot itself after db.json file change
 
-Is Superset
+Contains Sub Dictionary
 	[Documentation]		Expects resource_one as dictionary like, turns it into a Python dictionary
 	...					Expects resource_two as a string representation of a dictionary,
 	...					converts it into a Python dictionary

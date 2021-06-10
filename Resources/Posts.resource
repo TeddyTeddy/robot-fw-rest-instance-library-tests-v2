@@ -12,6 +12,13 @@ Get Post With Id
 	${post} =	Output		response body
 	[Return]	${post}
 
+Get Posts With Filter
+	[Documentation]		Given filter, it makes a GET request and returns the response body as the post
+	[Arguments]		${filter}
+	GET			/posts${filter}
+	${post_list} =	Output		response body
+	[Return]	${post_list}
+
 Create Post
 	[Documentation]		Given the json_post (i.e. a JSON representation of a post), it makes a POST
 	...					request. The response body to the POST request is the new post and there is an id

@@ -4,6 +4,8 @@ Documentation		All test cases are atomic: after the test execution, they must le
 ...					the test teardown method Restore Database gets called. This restores the
 ...					backend server's database to initial state before the test execution.
 ...					When we talk about the term "resource", we mean the post resource in the server
+...					Documentaion for the API can be found at https://github.com/typicode/json-server
+
 Resource			${EXECDIR}${/}Resources${/}Common${/}Common.resource
 Resource			${EXECDIR}${/}Resources${/}Posts.resource
 
@@ -18,6 +20,11 @@ ${NEW_USER_ID}				${2}
 ${NEW_TITLE}				Modified Title
 ${NEW_BODY}					Modified Body
 ${TAGS}						tag1 tag2 tag3
+&{EXPECTED_POST_WITH_ID_5}			userId=${1}
+...    								id=${5}
+...    								title=nesciunt quas odio
+...    								body=repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque
+
 
 *** Test Case ***
 Creating Post
@@ -30,12 +37,91 @@ Creating Post
 	${new_post_id}		${new_post} = 	Create Post		${JSON_POST}
 
 	# A) verify that ${new_post} content contains the items from ${JSON_POST}
-	Is Superset			${new_post}		${JSON_POST}
+	Contains Sub Dictionary			${new_post}		${JSON_POST}
 
 	# B) verify that what is created can indeed be retrived too
 	${post_read} = 		Get Post With Id	${new_post_id}
 	Should Be Equal		${new_post}		${post_read}
 
+Reading Post By Id
+	[Documentation]			Reads an existing post from the server. Compares the post read with the expected post
+	[Tags]		read-tested
+	# test call
+	${observed_post} = 		Get Post With Id	${5}
+	# verify
+	Should Be Equal		${observed_post}		${EXPECTED_POST_WITH_ID_5}
+
+Reading Post By Filtering Id
+	[Documentation]			Reads posts by providing a filter containing a id value
+	...						Expects that the returned post list contains only one post
+	...						Expects that the post matches with the expected post
+	[Tags]		read-tested
+	${filter} = 			Set Variable		?id=${EXPECTED_POST_WITH_ID_5}[id]
+	# test call
+	${post_list} = 			Get Posts With Filter	${filter}
+	# verify
+	${observed_length} = 	Get Length		${post_list}
+	Should Be Equal		${1}	${observed_length}
+	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+
+Reading Post By Filtering Title
+	[Documentation]			Reads posts by providing a filter containing a title value
+	...						Expects that the returned post list contains only one post
+	...						Expects that the post matches with the expected post
+	[Tags]		read-tested
+	${filter} = 			Set Variable		?title=${EXPECTED_POST_WITH_ID_5}[title]
+	# test call
+	${post_list} = 			Get Posts With Filter	${filter}
+	# verify
+	${observed_length} = 	Get Length		${post_list}
+	Should Be Equal		${1}	${observed_length}
+	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+
+Reading Post By Filtering Id & Title
+	[Documentation]			Reads posts by providing a filter containing an id value and a title value
+	...						Expects that the returned post list contains only one post
+	...						Expects that the post matches with the expected post
+	[Tags]		read-tested
+	${filter} = 			Set Variable		?id=${EXPECTED_POST_WITH_ID_5}[id]&title=${EXPECTED_POST_WITH_ID_5}[title]
+	# test call
+	${post_list} = 			Get Posts With Filter	${filter}
+	# verify
+	${observed_length} = 	Get Length		${post_list}
+	Should Be Equal		${1}	${observed_length}
+	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+
+Reading Post By Filtering UserId and Title
+	[Documentation]			Reads posts by providing a filter containing a userId value and a title value
+	...						Expects that the returned post list contains only one post
+	...						Expects that the post matches with the expected post
+	[Tags]		read-tested
+	${filter} = 			Set Variable		?userId=${EXPECTED_POST_WITH_ID_5}[userId]&title=${EXPECTED_POST_WITH_ID_5}[title]
+	${post_list} = 			Get Posts With Filter	${filter}
+	${observed_length} = 	Get Length		${post_list}
+	Should Be Equal		${1}	${observed_length}
+	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+
+Reading Post By Filtering UserId, Id and Title
+	[Documentation]			Reads posts by providing a filter containing a userId value, id value and a title value
+	...						Expects that the returned post list contains only one post
+	...						Expects that the post matches with the expected post
+	[Tags]		read-tested
+	${filter} = 			Set Variable		?userId=${EXPECTED_POST_WITH_ID_5}[userId]&id=${EXPECTED_POST_WITH_ID_5}[id]&title=${EXPECTED_POST_WITH_ID_5}[title]
+	${post_list} = 			Get Posts With Filter	${filter}
+	${observed_length} = 	Get Length		${post_list}
+	Should Be Equal		${1}	${observed_length}
+	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+
+Reading Post By Filtering UserId And Id
+	[Documentation]			Reads posts by providing a filter containing a userId value and an id value
+	...						Expects that the returned post list contains only one post
+	...						Expects that the post matches with the expected post
+	[Tags]		read-tested
+	${filter} = 			Set Variable		?userId=${EXPECTED_POST_WITH_ID_5}[userId]&id=${EXPECTED_POST_WITH_ID_5}[id]
+	${post_list} = 			Get Posts With Filter	${filter}
+	${observed_length} = 	Get Length		${post_list}
+	Should Be Equal		${1}	${observed_length}
+	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
 
 Updating Post UserId
 	[Documentation]			Creates a post with JSON_POST (1) and updates its "userId" locally
