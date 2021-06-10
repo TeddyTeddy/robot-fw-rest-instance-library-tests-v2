@@ -8,6 +8,7 @@ Documentation		All test cases are atomic: after the test execution, they must le
 
 Resource			${EXECDIR}${/}Resources${/}Common${/}Common.resource
 Resource			${EXECDIR}${/}Resources${/}Posts.resource
+Resource			${EXECDIR}${/}Resources${/}Database.resource
 
 Test Teardown		Restore Database
 
@@ -42,6 +43,16 @@ Creating Post
 	# B) verify that what is created can indeed be retrived too
 	${post_read} = 		Get Post With Id	${new_post_id}
 	Should Be Equal		${new_post}		${post_read}
+
+Reading All Posts
+	[Documentation]			Reads all the post resources and compares that with what database has
+	[Tags]		read-tested
+	# test call
+	${all_posts} = 		Read All Posts
+
+	# verify posts against database
+	${posts_directly_from_db} =	Fetch From Database		posts
+	Should Be Equal		${all_posts}		${posts_directly_from_db}
 
 Reading Post By Id
 	[Documentation]			Reads an existing post from the server. Compares the post read with the expected post
@@ -225,7 +236,7 @@ Update Post UserId & Body
 	Verify Post Updated		${post_id}		${expected_post}
 
 Update All Fields Except Id In Post
-	[Documentation]			Creates a post with JSON_POST (1) and updates its "userId", "title" and "body" items locally
+	[Documentation]			Creates a post with JSON_POST (1) and updates its "userId", "title" and "body" locally
 	...						Then uses the local post to update the one in the server via Update Post keyword.
 	...						Checks that the post resource in the server got updated
 	...						by calling Verify Post Updated
@@ -241,6 +252,34 @@ Update All Fields Except Id In Post
 	Log		Expected post got locally modified: ${expected_post}
 	# test call: update the post in the server
 	Update Post		${post_id}		${expected_post}
+	Verify Post Updated		${post_id}		${expected_post}
+
+Attempting To Update Id In Post
+	[Documentation]			Acc.to the API documentation, Id values are not mutable.
+	...						Any id value in the body of your PUT request will be ignored
+	...						Creates a post with JSON_POST (1) and updates its "userId", "title", "body" and "id" locally
+	...						Then uses the local post to update the one in the server via Update Post keyword.
+	...						Checks that the post resource got only "userId", "title" and "body" updated.
+	...						Checks that "id" did not change in the post resource.
+	[Tags]		create	read	update-tested
+	#	prepare the post to be updated
+	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
+	# note that expected_post is a dictionary
+
+	# update expected_post locally
+	Set To Dictionary		${expected_post}		userId=${NEW_USER_ID}
+	Set To Dictionary		${expected_post}		title=${NEW_TITLE}
+	Set To Dictionary		${expected_post}		body=${NEW_BODY}
+	${new_post_id} =		Evaluate	$post_id+1
+	Set To Dictionary		${expected_post}		id=${new_post_id}
+	Log		Expected post got locally modified: ${expected_post}
+	# test call: update the post in the server
+	Update Post		${post_id}		${expected_post}
+	# Checks that "id" did not change in the post resource
+	${expected_error} = 	Set Variable	{'userId': 2, 'title': 'Modified Title', 'body': 'Modified Body', 'id': 102} != {'userId': 2, 'title': 'Modified Title', 'body': 'Modified Body', 'id': 101}
+	Run Keyword And Expect Error	${expected_error} 		Verify Post Updated		${post_id}		${expected_post}
+	# Checks that "id" did not change in the post resource
+	Set To Dictionary		${expected_post}		id=${post_id}
 	Verify Post Updated		${post_id}		${expected_post}
 
 Add Additional Tags Field To Post
@@ -260,7 +299,7 @@ Add Additional Tags Field To Post
 	Update Post		${post_id}		${expected_post}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Attempt To Remove All Fields Including Id In Post
+Attempting To Remove All Fields Including Id In Post
 	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
 	...						we can erase all fields (except id) by not providing unwanted key/value pairs
 	...						in the provided JSON. For example, if we want to get rid of post title,
@@ -442,3 +481,18 @@ Remove Body And UserId In Post
 	Verify Post Updated		${post_id}		${expected_post}
 
 
+Deleting Post
+	[Documentation]			Creates a new post with JSON_POST (1) and retrives its id and the new post itself (2)
+	...						Deletes the post with the id and then attempts to retrive the post again.
+	...						The return value for the retrival must be an empty dictionary
+	[Tags]		create		read	delete-tested
+
+	${post_id}		${post} = 	Create Post		${JSON_POST}
+
+	# test call
+	Delete Post With Id		${post_id}
+
+	# The return value for the retrival must be an empty dictionary
+	${post_read} = 		Get Post With Id	${post_id}
+	${expected_post} =		Evaluate	{}
+	Should Be Equal		${expected_post}		${post_read}

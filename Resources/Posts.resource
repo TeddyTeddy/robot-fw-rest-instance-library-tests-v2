@@ -57,3 +57,14 @@ Update Post
 	[Documentation]			post is a dictionary
 	[Arguments]				${post_id}		${post}
 	PUT		/posts/${post_id}		${post}
+
+Delete Post With Id
+	[Documentation]		Given post_id, it makes a DELETE request
+	[Arguments]		${post_id}
+	DELETE			/posts/${post_id}
+
+Read All Posts
+	[Documentation]		Returns all post resources
+	GET		/posts
+	${posts} =	Output		response body
+	[Return]	${posts}
