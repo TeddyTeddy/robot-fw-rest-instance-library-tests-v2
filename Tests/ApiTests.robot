@@ -539,7 +539,7 @@ Pagination Where Limit Equals To Total
 Pagination Where Limit Is Less Than Total
 	[Documentation]		limit stands for the number of posts per page (i.e. 8, 20 and 50 for the purpose)
 	...					total stands for the number of posts in the database (i.e. 100 currently)
-	...					When limit equals to total, a single page must contain all the posts in the database
+	...					When limit equals to total, a single page can only contain limit number of the posts
 	[Tags]	read-tested   pagination	run
 	[Template]			Getting Posts With Pagination
 	${80}
