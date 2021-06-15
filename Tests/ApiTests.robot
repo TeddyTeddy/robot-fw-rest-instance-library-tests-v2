@@ -27,6 +27,29 @@ ${TAGS}						tag1 tag2 tag3
 ...    								body=repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque
 
 
+*** Keywords ***
+Getting Posts With Pagination
+	[Documentation]			limit stands for number of posts in a given page
+	...						total stands for number of posts in the database
+	...						pages is a set containing page numbers based on a given limit and total
+	...						A page is a list of posts returned by GET /posts?_page=${p}&_limit=${limit}
+	[Arguments]		${limit}
+
+	${total} = 		Get Number of Posts			# total is 100
+	${pages} = 		Get Page Set	${total}	${limit}
+
+	FOR  ${p}	IN   @{pages}
+		${page_start_index} =		Evaluate		$limit*($p-1)
+		${page_end_index} =			Evaluate		$limit*$p
+		${expected_posts} =			Fetch Posts From Database	${page_start_index}		${page_end_index}
+		${expected_link_header} =	Calculate Link Header		${pages}	${p}	${limit}
+		# test call
+		${observed_posts} 	${observed_link_header} =		Get Posts With Pagination	${p}	${limit}
+		Should Be Equal		${expected_posts}		${observed_posts}
+		Should Be Equal		${expected_link_header}		${observed_link_header}
+	END
+
+
 *** Test Case ***
 Creating Post
 	[Documentation]			Creates a new post with JSON_POST (1) and retrives its id and the new post itself (2)
@@ -496,3 +519,30 @@ Deleting Post
 	${post_read} = 		Get Post With Id	${post_id}
 	${expected_post} =		Evaluate	{}
 	Should Be Equal		${expected_post}		${post_read}
+
+Pagination Where Limit Exceeds Total
+	[Documentation]		limit stands for the number of posts per page (i.e. 200 for the purpose)
+	...					total stands for the number of posts in the database (i.e. 100 currently)
+	...					When limit exceeds total, a single page must contain all the posts in the database
+	[Tags]	read-tested   pagination	run
+	[Template]			Getting Posts With Pagination
+	${200}
+
+Pagination Where Limit Equals To Total
+	[Documentation]		limit stands for the number of posts per page (i.e. 100 for the purpose)
+	...					total stands for the number of posts in the database (i.e. 100 currently)
+	...					When limit equals to total, a single page must contain all the posts in the database
+	[Tags]	read-tested   pagination	run
+	[Template]			Getting Posts With Pagination
+	${100}
+
+Pagination Where Limit Is Less Than Total
+	[Documentation]		limit stands for the number of posts per page (i.e. 8, 20 and 50 for the purpose)
+	...					total stands for the number of posts in the database (i.e. 100 currently)
+	...					When limit equals to total, a single page must contain all the posts in the database
+	[Tags]	read-tested   pagination	run
+	[Template]			Getting Posts With Pagination
+	${80}
+	${50}
+	${20}
+	${8}

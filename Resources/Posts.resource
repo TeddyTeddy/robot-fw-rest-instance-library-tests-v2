@@ -13,11 +13,19 @@ Get Post With Id
 	[Return]	${post}
 
 Get Posts With Filter
-	[Documentation]		Given filter, it makes a GET request and returns the response body as the post
+	[Documentation]		Given filter, it makes a GET request and returns the response body as the posts
 	[Arguments]		${filter}
 	GET			/posts${filter}
 	${post_list} =	Output		response body
 	[Return]	${post_list}
+
+Get Posts With Pagination
+	[Documentation]		Given pagination parameters page and limit, it makes a GET request and returns the response body as the posts
+	[Arguments]		${page}			${limit}
+	GET			/posts?_page=${page}&_limit=${limit}
+	${post_list} =		Output		response body
+	${link_header} = 	Output		response headers Link
+	[Return]	${post_list}	${link_header}
 
 Create Post
 	[Documentation]		Given the json_post (i.e. a JSON representation of a post), it makes a POST
