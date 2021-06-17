@@ -17,9 +17,13 @@ Get Number of Posts
 	[Return]	${number_of_posts}
 
 Fetch Posts From Database
-	[Documentation]		Returns the posts from the database starting with page_start_index
-	...					and ending with page_end_index
-	[Arguments]		${start_index}		${end_index}
+	[Documentation]		If start_index and end_index are provided, returns the posts
+	... 				from the database starting with page_start_index
+	...					and ending with page_end_index. Otherwise returns all the posts in the database
+	[Arguments]		${start_index}=${EMPTY}		${end_index}=${EMPTY}
 	${posts} = 		Fetch From Database 	posts
-	${posts} =		Evaluate		$posts[$start_index:$end_index]
+	${is_range_provided} = 		Evaluate	$start_index!='' and $end_index!=''
+	IF	${is_range_provided}
+		${posts} =		Evaluate		$posts[$start_index:$end_index]
+	END
 	[Return]		${posts}

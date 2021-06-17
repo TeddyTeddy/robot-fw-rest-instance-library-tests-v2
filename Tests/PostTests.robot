@@ -10,6 +10,7 @@ Resource			${EXECDIR}${/}Resources${/}Common${/}Common.resource
 Resource			${EXECDIR}${/}Resources${/}Posts.resource
 Resource			${EXECDIR}${/}Resources${/}Database.resource
 
+Suite Setup			Fetch Number Of Posts
 Test Teardown		Restore Database
 
 
@@ -28,21 +29,66 @@ ${TAGS}						tag1 tag2 tag3
 
 
 *** Keywords ***
-Getting Posts With Pagination
-	[Documentation]			limit stands for number of posts in a given page
-	...						total stands for number of posts in the database
-	...						pages is a set containing page numbers based on a given limit and total
-	...						A page is a list of posts returned by GET /posts?_page=${p}&_limit=${limit}
+Fetch Number Of Posts
+	# total is 100 with the current db.json, but it can change if we change the db.json
+	${NUMPER_OF_POSTS} = 	Get Number of Posts
+	Set Suite Variable		${NUMPER_OF_POSTS}
+
+
+Test Getting Posts With Pagination
+	[Documentation]			limit stands for the number of posts in a given page
+	...						total stands for the number of posts in the database
+	...						A page contains a list of posts returned by GET /posts?_page=${p}&_limit=${limit}.
+	...						Part One:
+	...						Given the limit and total, we calculate pages_with_posts
+	...						For each p in pages_with_posts, We do the following:
+	...							- Fetch expected_posts from the database directly
+	...						    - Calculate the expected Link header content.
+	...						    - Make a test call to an API (i.e. GET /posts?_page=${p}&_limit=${limit})
+	...						      and store the outcome as observed_posts and observed_link_header.
+	...						    - Compare expected_posts to observed_posts.
+	...							- Compare observed_link_header to expected_link_header
+	...
+	...						Part Two:
+	...							- Given pages_with_posts, we calculate pages_without_posts
+	...						For each p in pages_without_posts, we do the following:
+	...							- Make a test call to API (i.e. GET /posts?_page=${p}&_limit=${limit})
+	...							  and store the outcome as observed_posts and observed_link_header
+	...						    - Compare observed_posts to and empty list.
+	...							- Compare observed_link_header to an empty string
 	[Arguments]		${limit}
 
-	${total} = 		Get Number of Posts			# total is 100
-	${pages} = 		Get Page Set	${total}	${limit}
+	# limit stands for the number of posts in a given page
+	Log		${limit}
+	# total stands for the number of posts in the database
+	${total} = 					Set Variable	${NUMPER_OF_POSTS}
+	# Part One
+	# pages_with_posts is a list containing page numbers based on a given limit and total
+	# note that the numbered pages are supposed to contain posts
+	${pages_with_posts} = 		Get Page Set	${total}	${limit}
 
-	FOR  ${p}	IN   @{pages}
+	FOR  ${p}	IN   @{pages_with_posts}
 		${page_start_index} =		Evaluate		$limit*($p-1)
 		${page_end_index} =			Evaluate		$limit*$p
 		${expected_posts} =			Fetch Posts From Database	${page_start_index}		${page_end_index}
-		${expected_link_header} =	Calculate Link Header		${pages}	${p}	${limit}
+		${expected_link_header} =	Calculate Link Header		${pages_with_posts}		${p}	${limit}
+		# test call
+		${observed_posts} 	${observed_link_header} =		Get Posts With Pagination	${p}	${limit}
+		Should Be Equal		${expected_posts}		${observed_posts}
+		Should Be Equal		${expected_link_header}		${observed_link_header}
+	END
+
+	# Part Two
+	# pages_without_posts is a list of the pages that are not supposed to contain posts
+	# pages_without_posts is calculated based on pages_with_posts
+	# The rule is that pages_without_posts must not contain any page included in pages_with_posts
+	${pages_without_posts} = 	Get Empty Pages		${pages_with_posts}
+	# expected_posts is an empty list
+	${expected_posts} =			Create List
+	# expected_link_header is an empty header
+	${expected_link_header} =	Set Variable	${EMPTY}
+
+	FOR  ${p}	IN   @{pages_without_posts}
 		# test call
 		${observed_posts} 	${observed_link_header} =		Get Posts With Pagination	${p}	${limit}
 		Should Be Equal		${expected_posts}		${observed_posts}
@@ -520,29 +566,59 @@ Deleting Post
 	${expected_post} =		Evaluate	{}
 	Should Be Equal		${expected_post}		${post_read}
 
-Pagination Where Limit Exceeds Total
-	[Documentation]		limit stands for the number of posts per page (i.e. 200 for the purpose)
-	...					total stands for the number of posts in the database (i.e. 100 currently)
+Pagination Where Page Limit Exceeds Total Number Of Posts
+	[Documentation]		limit stands for the number of posts per page (e.g. NUMPER_OF_POSTS + 20)
+	...					total stands for the number of posts in the database (i.e. NUMPER_OF_POSTS)
 	...					When limit exceeds total, a single page must contain all the posts in the database
-	[Tags]	read-tested   pagination	run
-	[Template]			Getting Posts With Pagination
-	${200}
+	[Tags]	read-tested   pagination
+	[Template]			Test Getting Posts With Pagination
+	${NUMPER_OF_POSTS + 1}
+	${NUMPER_OF_POSTS + 2}
+	${NUMPER_OF_POSTS + 3}
+	${NUMPER_OF_POSTS + 4}
+	${NUMPER_OF_POSTS + 5}
+	${NUMPER_OF_POSTS + 10}
+	${NUMPER_OF_POSTS + 20}
+	${NUMPER_OF_POSTS + 50}
+	${NUMPER_OF_POSTS + 100}
 
-Pagination Where Limit Equals To Total
-	[Documentation]		limit stands for the number of posts per page (i.e. 100 for the purpose)
-	...					total stands for the number of posts in the database (i.e. 100 currently)
+Pagination Where Page Limit Equals To Total Number Of Posts
+	[Documentation]		limit stands for the number of posts per page (i.e. NUMPER_OF_POSTS)
+	...					total stands for the number of posts in the database (i.e. NUMPER_OF_POSTS)
 	...					When limit equals to total, a single page must contain all the posts in the database
-	[Tags]	read-tested   pagination	run
-	[Template]			Getting Posts With Pagination
-	${100}
+	[Tags]	read-tested   pagination
+	[Template]			Test Getting Posts With Pagination
+	${NUMPER_OF_POSTS}
 
-Pagination Where Limit Is Less Than Total
-	[Documentation]		limit stands for the number of posts per page (i.e. 8, 20 and 50 for the purpose)
-	...					total stands for the number of posts in the database (i.e. 100 currently)
-	...					When limit equals to total, a single page can only contain limit number of the posts
-	[Tags]	read-tested   pagination	run
-	[Template]			Getting Posts With Pagination
-	${80}
-	${50}
-	${20}
-	${8}
+Pagination Where Page Limit Is Less Than Total Number Of Posts
+	[Documentation]		limit stands for the number of posts per page (e.g. 8, 20 or 50)
+	...					total stands for the number of posts in the database (i.e. NUMPER_OF_POSTS)
+	...					When limit is less than the total, a single page can only contain limit number of the posts
+	[Tags]	read-tested   pagination
+
+	${limit_list} =		Evaluate		list(range(1, $NUMPER_OF_POSTS))
+	FOR  ${limit} 	IN 		@{limit_list}
+		Test Getting Posts With Pagination		${limit}
+	END
+
+Sorting By Id In Ascending Order
+	[Documentation]		Upon GET /posts?_sort=id&_order=asc  we should get a list of posts sorted by id
+	...					in ascending order. We compare the the list with the one we fetch & sort from the database
+	[Tags]	read-tested 	sorting
+
+	${expected_posts} =		Fetch Posts From Database
+	${expected_posts} =		Sort Posts By Id		${expected_posts}	asc
+	# test call
+	${observed_posts} =		Get Posts By Id In Ascending Order
+	Should Be Equal		${expected_posts}		${observed_posts}
+
+Sorting By Id In Descending Order
+	[Documentation]		Upon GET /posts?_sort=id&_order=desc  we should get a list of posts sorted by id
+	...					in descending order. We compare the the list with the one we fetch & sort from the database
+	[Tags]	read-tested 	sorting
+
+	${expected_posts} =		Fetch Posts From Database
+	${expected_posts} =		Sort Posts By Id		${expected_posts}	desc
+	# test call
+	${observed_posts} =		Get Posts By Id In Descending Order
+	Should Be Equal		${expected_posts}		${observed_posts}

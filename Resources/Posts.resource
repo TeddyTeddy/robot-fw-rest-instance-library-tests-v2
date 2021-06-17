@@ -22,7 +22,13 @@ Get Posts With Filter
 Get Posts With Pagination
 	[Documentation]		Given pagination parameters page and limit, it makes a GET request and returns the response body as the posts
 	[Arguments]		${page}			${limit}
-	GET			/posts?_page=${page}&_limit=${limit}
+	IF		${limit}==${DEFAULT_PAGE_LIMIT}
+		# Acc.to the API documentation, 10 items per page are returned by default
+		# if we don't provide limit, which has value 10, API should assume that limit is 10
+		GET			/posts?_page=${page}
+	ELSE
+		GET			/posts?_page=${page}&_limit=${limit}
+	END
 	${post_list} =		Output		response body
 	${link_header} = 	Output		response headers Link
 	[Return]	${post_list}	${link_header}
@@ -74,5 +80,17 @@ Delete Post With Id
 Read All Posts
 	[Documentation]		Returns all post resources
 	GET		/posts
+	${posts} =	Output		response body
+	[Return]	${posts}
+
+Get Posts By Id In Ascending Order
+	[Documentation]		Returns posts by id in ascending order
+	GET		/posts?_sort=id&_order=asc
+	${posts} =	Output		response body
+	[Return]	${posts}
+
+Get Posts By Id In Descending Order
+	[Documentation]		Returns posts by id in descending order
+	GET		/posts?_sort=id&_order=desc
 	${posts} =	Output		response body
 	[Return]	${posts}
