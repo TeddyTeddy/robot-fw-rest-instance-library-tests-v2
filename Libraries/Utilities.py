@@ -39,12 +39,12 @@ def get_empty_pages(pages_with_resources):
 
 
 @keyword
-def sort_posts_by_id(posts, order):
+def sort_resource_list(resource_list, field, order):
 	# https://stackoverflow.com/questions/72899/how-do-i-sort-a-list-of-dictionaries-by-a-value-of-the-dictionary
 	if order == 'asc':
-		sorted_posts = sorted(posts, key=itemgetter('id'), reverse=False)	# reverse=True for ascending order
+		sorted_resource_list = sorted(resource_list, key=itemgetter(field), reverse=False)	# reverse=True for ascending order
 	elif order == 'desc':
-		sorted_posts = sorted(posts, key=itemgetter('id'), reverse=True)	# reverse=True for descending order
+		sorted_resource_list = sorted(resource_list, key=itemgetter(field), reverse=True)	# reverse=True for descending order
 	else:
 		assert False
-	return sorted_posts
+	return sorted_resource_list

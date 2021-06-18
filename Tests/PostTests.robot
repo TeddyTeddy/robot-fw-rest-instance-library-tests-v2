@@ -601,24 +601,47 @@ Pagination Where Page Limit Is Less Than Total Number Of Posts
 		Test Getting Posts With Pagination		${limit}
 	END
 
-Sorting By Id In Ascending Order
+Sorting Posts By Id In Ascending Order
 	[Documentation]		Upon GET /posts?_sort=id&_order=asc  we should get a list of posts sorted by id
 	...					in ascending order. We compare the the list with the one we fetch & sort from the database
 	[Tags]	read-tested 	sorting
 
 	${expected_posts} =		Fetch Posts From Database
-	${expected_posts} =		Sort Posts By Id		${expected_posts}	asc
+	${expected_posts} =		Sort Resource List		${expected_posts}	id	asc
 	# test call
 	${observed_posts} =		Get Posts By Id In Ascending Order
 	Should Be Equal		${expected_posts}		${observed_posts}
 
-Sorting By Id In Descending Order
+Sorting Posts By Id In Descending Order
 	[Documentation]		Upon GET /posts?_sort=id&_order=desc  we should get a list of posts sorted by id
 	...					in descending order. We compare the the list with the one we fetch & sort from the database
 	[Tags]	read-tested 	sorting
 
 	${expected_posts} =		Fetch Posts From Database
-	${expected_posts} =		Sort Posts By Id		${expected_posts}	desc
+	${expected_posts} =		Sort Resource List		${expected_posts}	id	desc
 	# test call
 	${observed_posts} =		Get Posts By Id In Descending Order
 	Should Be Equal		${expected_posts}		${observed_posts}
+
+Sorting Comments For A Specific Post By Id in Descending Order
+	[Documentation]		Upon GET /posts/1/comments?_sort=id&_order=desc, we should get a list of comments
+	...					belonging to post with id=1 which are sorted by comment id in descending order
+	[Tags]	read-tested 	sorting
+
+	${post_id} =			Set Variable		${1}
+	${expected_comments} =	Fetch Comments from Database   ${post_id}	id	desc
+	# test call
+	${observed_comments} =	Get Comments For A Specific Post 	${post_id}	id	desc
+	Should Be Equal			${expected_comments}		${observed_comments}
+
+
+Sorting Comments For A Specific Post By Id in Ascending Order
+	[Documentation]		Upon GET /posts/1/comments?_sort=id&_order=asc, we should get a list of comments
+	...					belonging to post with id=1 which are sorted by comment id in ascending order
+	[Tags]	read-tested 	sorting
+
+	${post_id} =			Set Variable		${1}
+	${expected_comments} =	Fetch Comments from Database   ${post_id}	id	asc
+	# test call
+	${observed_comments} =	Get Comments For A Specific Post 	${post_id}	id	asc
+	Should Be Equal			${expected_comments}		${observed_comments}

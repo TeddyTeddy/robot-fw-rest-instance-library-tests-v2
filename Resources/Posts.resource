@@ -94,3 +94,10 @@ Get Posts By Id In Descending Order
 	GET		/posts?_sort=id&_order=desc
 	${posts} =	Output		response body
 	[Return]	${posts}
+
+Get Comments For A Specific Post
+	[Documentation]
+	[Arguments]		${post_id}		${field}	${order}
+	GET		/posts/${post_id}/comments?_sort=${field}&_order=${order}
+	${comments} =	Output		response body
+	[Return]	${comments}

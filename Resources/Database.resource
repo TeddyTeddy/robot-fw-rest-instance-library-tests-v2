@@ -27,3 +27,13 @@ Fetch Posts From Database
 		${posts} =		Evaluate		$posts[$start_index:$end_index]
 	END
 	[Return]		${posts}
+
+Fetch Comments from Database
+	[Documentation]		Returns the comments from the database for the given post with post_id
+	...					Sorts the comments by the field in the given order
+	[Arguments]			${post_id}		${field}		${order}
+	${comments} = 		Fetch From Database 	comments
+	${comments} =		Filter Resource List By 		${comments}		postId		${post_id}
+	${comments} =		Sort Resource List		${comments}	 	${field}	${order}
+	[Return]	${comments}
+

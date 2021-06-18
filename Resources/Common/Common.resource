@@ -89,3 +89,17 @@ Calculate Link Header Without Limit Included
 		${link_header} = 	Evaluate	$LINK_HEADER_TEMPLATE_6.format(previous_page=$current_page_index-1, next_page=$current_page_index+1, last_page_index=$last_page_index)
 	END
 	[Return]	${link_header}
+
+Filter Resource List By
+	[Documentation]		Given a list of resources, which are dictionaries, this keyword returns the resources
+	...					having field_name with field_value
+	[Arguments]			${resources_list}		${field_name}		${field_value}
+	# result is an empty list at the beginning
+	${result} =			Create List
+	FOR		${resource}		IN 		@{resources_list}
+		${is_match} = 		Evaluate	$field_name in $resource and $resource[$field_name]==$field_value
+		IF	${is_match}
+			Append To List		${result}		${resource}
+		END
+	END
+	[Return]		${result}
