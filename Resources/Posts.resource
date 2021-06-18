@@ -96,8 +96,14 @@ Get Posts By Id In Descending Order
 	[Return]	${posts}
 
 Get Comments For A Specific Post
-	[Documentation]
-	[Arguments]		${post_id}		${field}	${order}
-	GET		/posts/${post_id}/comments?_sort=${field}&_order=${order}
+	[Documentation]		For a given post_id, it returns the comments with that post_id
+	...					Sorts the results based on field_1 (and field_2) in a given orders order_1 (and order_2)
+	[Arguments]		${post_id}		${field_1}		${order_1}		${field_2}=${EMPTY}		${order_2}=${EMPTY}
+	${is_field_2_provided} = 	Evaluate	$field_2!='' and $order_2!=''
+	IF	${is_field_2_provided}
+		GET		/posts/${post_id}/comments?_sort=${field_1},${field_2}&_order=${order_1},${order_2}
+	ELSE
+		GET		/posts/${post_id}/comments?_sort=${field_1}&_order=${order_1}
+	END
 	${comments} =	Output		response body
 	[Return]	${comments}

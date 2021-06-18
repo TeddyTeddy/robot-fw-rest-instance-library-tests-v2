@@ -645,3 +645,76 @@ Sorting Comments For A Specific Post By Id in Ascending Order
 	# test call
 	${observed_comments} =	Get Comments For A Specific Post 	${post_id}	id	asc
 	Should Be Equal			${expected_comments}		${observed_comments}
+
+Sorting Comments For A Specific Post By Id (Asc) And By Email (Asc)
+	[Documentation]		Referring to the API documentation:
+	...					For sorting with multiple fields, use the following format:
+	...					GET 	/posts/1/comments?_sort=id,email&_order=asc,asc
+	...					This test case make the above API call and retrive the observed comments.
+	...					Then it will fetch the expected comments directly from database
+	...				    and sort them first by id (asc) and then by email (asc).
+	...					Then it will compare the observed comments with the expected comments
+	[Tags]	read-tested 	sorting
+
+	${post_id} =			Set Variable		${1}
+	# TODO: expected_comments may need to be different than what the keyword returns. Needs clarification by the API developer
+	${expected_comments} =	Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
+	...						${post_id}		id		asc	  	email	asc
+	# test call
+	${observed_comments} =	Get Comments For A Specific Post 	${post_id}	id		asc		email	asc
+	Should Be Equal			${expected_comments}		${observed_comments}
+
+Sorting Comments For A Specific Post By Id (Desc) And By Email (Asc)
+	[Documentation]		Referring to the API documentation:
+	...					For sorting with multiple fields, use the following format:
+	...					GET 	/posts/1/comments?_sort=id,email&_order=desc,asc
+	...					This test case make the above API call and retrive the observed comments.
+	...					Then it will fetch the expected comments directly from database
+	...				    and sort them first by id (desc) and then by email (asc).
+	...					Then it will compare the observed comments with the expected comments
+	[Tags]	read-tested 	sorting
+
+	${post_id} =			Set Variable		${1}
+	# TODO: expected_comments may need to be different than what the keyword returns. Needs clarification by the API developer
+	${expected_comments} =	Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
+	...						${post_id}		id		desc	  	email	asc
+	# test call
+	${observed_comments} =	Get Comments For A Specific Post 	${post_id}	id		desc		email	asc
+	Should Be Equal			${expected_comments}		${observed_comments}
+
+Sorting Comments For A Specific Post By Id (Asc) And By Email (Desc)
+	[Documentation]		Referring to the API documentation:
+	...					For sorting with multiple fields, use the following format:
+	...					GET 	/posts/1/comments?_sort=id,email&_order=asc,desc
+	...					This test case make the above API call and retrive the observed comments.
+	...					Then it will fetch the expected comments directly from database
+	...				    and sort them first by id (asc) and then by email (desc).
+	...					Then it will compare the observed comments with the expected comments
+	[Tags]	read-tested 	sorting
+
+	${post_id} =			Set Variable		${1}
+	# TODO: expected_comments may need to be different than what the keyword returns. Needs clarification by the API developer
+	${expected_comments} =	Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
+	...						${post_id}		id		asc	  	email	desc
+	# test call
+	${observed_comments} =	Get Comments For A Specific Post 	${post_id}	id		asc		email	desc
+	Should Be Equal			${expected_comments}		${observed_comments}
+
+Sorting Comments For A Specific Post By Id (Desc) And By Email (Desc)
+	[Documentation]		Referring to the API documentation:
+	...					For sorting with multiple fields, use the following format:
+	...					GET 	/posts/1/comments?_sort=id,email&_order=desc,desc
+	...					This test case make the above API call and retrive the observed comments.
+	...					Then it will fetch the expected comments directly from database
+	...				    and sort them first by id (desc) and then by email (desc).
+	...					Then it will compare the observed comments with the expected comments
+	[Tags]	read-tested 	sorting
+
+	${post_id} =			Set Variable		${1}
+	# TODO: expected_comments may need to be different than what the keyword returns. Needs clarification by the API developer
+	${expected_comments} =	Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
+	...						${post_id}		id		desc	  	email	desc
+	# test call
+	${observed_comments} =	Get Comments For A Specific Post 	${post_id}	id		desc		email	desc
+	Should Be Equal			${expected_comments}		${observed_comments}
+

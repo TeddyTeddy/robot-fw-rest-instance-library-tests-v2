@@ -37,3 +37,11 @@ Fetch Comments from Database
 	${comments} =		Sort Resource List		${comments}	 	${field}	${order}
 	[Return]	${comments}
 
+Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
+	[Documentation]		Returns the comments with a given post_id
+	[Arguments]			${post_id}		${field_1}		${order_1}	  	${field_2}		${order_2}
+	${comments} = 		Fetch From Database 	comments
+	${comments} =		Filter Resource List By 		${comments}		postId		${post_id}
+	${comments} =		Sort Resource List		${comments}	 	${field_1}	${order_1}
+	${comments} =		Sort Resource List		${comments}	 	${field_2}	${order_2}
+	[Return]			${comments}
