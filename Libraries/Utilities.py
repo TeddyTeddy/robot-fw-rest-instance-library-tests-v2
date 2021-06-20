@@ -48,3 +48,7 @@ def sort_resource_list(resource_list, field, order):
 	else:
 		assert False
 	return sorted_resource_list
+
+@keyword
+def free_memory(reference):
+	del reference

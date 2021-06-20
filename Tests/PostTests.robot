@@ -31,8 +31,8 @@ ${TAGS}						tag1 tag2 tag3
 *** Keywords ***
 Fetch Number Of Posts
 	# total is 100 with the current db.json, but it can change if we change the db.json
-	${NUMPER_OF_POSTS} = 	Get Number of Posts
-	Set Suite Variable		${NUMPER_OF_POSTS}
+	${NUMBER_OF_POSTS} = 	Get Number of Posts
+	Set Suite Variable		${NUMBER_OF_POSTS}
 
 
 Test Getting Posts With Pagination
@@ -61,7 +61,7 @@ Test Getting Posts With Pagination
 	# limit stands for the number of posts in a given page
 	Log		${limit}
 	# total stands for the number of posts in the database
-	${total} = 					Set Variable	${NUMPER_OF_POSTS}
+	${total} = 					Set Variable	${NUMBER_OF_POSTS}
 	# Part One
 	# pages_with_posts is a list containing page numbers based on a given limit and total
 	# note that the numbered pages are supposed to contain posts
@@ -567,36 +567,36 @@ Deleting Post
 	Should Be Equal		${expected_post}		${post_read}
 
 Pagination Where Page Limit Exceeds Total Number Of Posts
-	[Documentation]		limit stands for the number of posts per page (e.g. NUMPER_OF_POSTS + 20)
-	...					total stands for the number of posts in the database (i.e. NUMPER_OF_POSTS)
+	[Documentation]		limit stands for the number of posts per page (e.g. NUMBER_OF_POSTS + 20)
+	...					total stands for the number of posts in the database (i.e. NUMBER_OF_POSTS)
 	...					When limit exceeds total, a single page must contain all the posts in the database
 	[Tags]	read-tested   pagination
 	[Template]			Test Getting Posts With Pagination
-	${NUMPER_OF_POSTS + 1}
-	${NUMPER_OF_POSTS + 2}
-	${NUMPER_OF_POSTS + 3}
-	${NUMPER_OF_POSTS + 4}
-	${NUMPER_OF_POSTS + 5}
-	${NUMPER_OF_POSTS + 10}
-	${NUMPER_OF_POSTS + 20}
-	${NUMPER_OF_POSTS + 50}
-	${NUMPER_OF_POSTS + 100}
+	${NUMBER_OF_POSTS + 1}
+	${NUMBER_OF_POSTS + 2}
+	${NUMBER_OF_POSTS + 3}
+	${NUMBER_OF_POSTS + 4}
+	${NUMBER_OF_POSTS + 5}
+	${NUMBER_OF_POSTS + 10}
+	${NUMBER_OF_POSTS + 20}
+	${NUMBER_OF_POSTS + 50}
+	${NUMBER_OF_POSTS + 100}
 
 Pagination Where Page Limit Equals To Total Number Of Posts
-	[Documentation]		limit stands for the number of posts per page (i.e. NUMPER_OF_POSTS)
-	...					total stands for the number of posts in the database (i.e. NUMPER_OF_POSTS)
+	[Documentation]		limit stands for the number of posts per page (i.e. NUMBER_OF_POSTS)
+	...					total stands for the number of posts in the database (i.e. NUMBER_OF_POSTS)
 	...					When limit equals to total, a single page must contain all the posts in the database
 	[Tags]	read-tested   pagination
 	[Template]			Test Getting Posts With Pagination
-	${NUMPER_OF_POSTS}
+	${NUMBER_OF_POSTS}
 
 Pagination Where Page Limit Is Less Than Total Number Of Posts
 	[Documentation]		limit stands for the number of posts per page (e.g. 8, 20 or 50)
-	...					total stands for the number of posts in the database (i.e. NUMPER_OF_POSTS)
+	...					total stands for the number of posts in the database (i.e. NUMBER_OF_POSTS)
 	...					When limit is less than the total, a single page can only contain limit number of the posts
 	[Tags]	read-tested   pagination
 
-	${limit_list} =		Evaluate		list(range(1, $NUMPER_OF_POSTS))
+	${limit_list} =		Evaluate		list(range(1, $NUMBER_OF_POSTS))
 	FOR  ${limit} 	IN 		@{limit_list}
 		Test Getting Posts With Pagination		${limit}
 	END
@@ -718,3 +718,76 @@ Sorting Comments For A Specific Post By Id (Desc) And By Email (Desc)
 	${observed_comments} =	Get Comments For A Specific Post 	${post_id}	id		desc		email	desc
 	Should Be Equal			${expected_comments}		${observed_comments}
 
+Slicing Posts Ten Times With Different Start And End Values
+	[Documentation]		Referring to the API documentation:
+	...					GET /posts?_start=20&_end=30
+	...					where _start is inclusive and _end is exclusive
+	...					This test case make the above API call with a random set of _start and _end values
+	...					and makes a fetch of expected_posts from database for the same _start and _end.
+	...					It then compares the expected_posts with observed_posts. It also calculates the expected length
+	...					of observed_posts and compares that with the observed length of observed_posts
+	[Tags]	read-tested		slicing
+
+	FOR		${i}	IN RANGE 		10
+		# note that start_index starts from zero when posts are fetched from database
+		${start_index} =		Evaluate	random.randint(0, $NUMBER_OF_POSTS-1)  	modules=random
+		${end_index} =			Evaluate	random.randint($start_index+1, $start_index+$NUMBER_OF_POSTS)  	modules=random
+		${expected_posts} =		Fetch Posts From Database	${start_index}		${end_index}
+
+		# note that start_index starts from 0 too when posts are fetched via API call
+		# test call
+		${observed_posts} =		Get Sliced Posts	${start_index}		${end_index}
+		Should Be Equal			${expected_posts}		${observed_posts}
+		# note that start_index is between [0, NUMBER_OF_POSTS-1]
+		# and end_index is between [start_index+1, start_index+NUMBER_OF_POSTS]
+		# we expect observed_posts to be a non-empty list at least containing 1 item
+		${observed_length} = 			Get Length				${observed_posts}
+		Should Not Be Equal		${0}		${observed_length}
+		# calculate expected_length of the observed_posts list
+		IF	${end_index} >= ${NUMBER_OF_POSTS}
+			${expected_length} =	Evaluate	$NUMBER_OF_POSTS-$start_index
+		ELSE
+			${expected_length} =	Evaluate	$end_index-$start_index
+		END
+		Should Be Equal		${expected_length}		${observed_length}
+	END
+
+Slicing Posts With All Possible Start And End Combinations
+	[Documentation]		Referring to the API documentation:
+	...					GET /posts?_start=20&_end=30
+	...					where _start is inclusive and _end is exclusive
+	...					This test case make the above API call with all possible combinations of _start and _end values.
+	...					For each call, the test case fetches expected_posts from database for the same _start and _end.
+	...					It then compares the expected_posts with observed_posts. It also calculates the expected length
+	...					of observed_posts and compares that with the observed length of observed_posts
+	[Tags]	read-tested		slicing		run-me-only
+
+	FOR  ${start_index}		IN RANGE		${0}	${NUMBER_OF_POSTS+10}
+		FOR  ${end_index}	IN RANGE		${start_index+1}	${NUMBER_OF_POSTS + 10 +1}
+			Log To Console	start_index:${start_index}
+			Log To Console	end_index:${end_index}
+			# note that start_index starts from zero when posts are fetched from database
+			${expected_posts} =		Fetch Posts From Database	${start_index}		${end_index}
+			# note that start_index starts from 0 too when posts are fetched via API call
+			# test call
+			${observed_posts} =		Get Sliced Posts	${start_index}		${end_index}
+			Should Be Equal			${expected_posts}		${observed_posts}
+			# note that start_index is between [0, NUMBER_OF_POSTS-1]
+			# and end_index is between [start_index+1, start_index+NUMBER_OF_POSTS]
+			# we expect observed_posts to be a non-empty list at least containing 1 item
+			${observed_length} = 			Get Length				${observed_posts}
+			# calculate expected_length of the observed_posts list
+			IF	${end_index} < ${NUMBER_OF_POSTS}
+				${expected_length} =	Evaluate	$end_index-$start_index
+			ELSE IF	${end_index} >= ${NUMBER_OF_POSTS} and ${start_index} < ${NUMBER_OF_POSTS}
+				${expected_length} =	Evaluate	$NUMBER_OF_POSTS-$start_index
+			ELSE
+				${expected_length} =	Set Variable	${0}
+			END
+			Should Be Equal		${expected_length}		${observed_length}
+
+			Free Memory		${expected_posts}
+			Free Memory		${observed_posts}
+		END
+		Reload Library		REST
+	END

@@ -107,3 +107,10 @@ Get Comments For A Specific Post
 	END
 	${comments} =	Output		response body
 	[Return]	${comments}
+
+Get Sliced Posts
+	[Documentation]		start_index starts from 1 as we fetch from the API now
+	[Arguments]			${start_index}		${end_index}
+	GET		/posts?_start=${start_index}&_end=${end_index}
+	${posts} =	Output		response body
+	[Return]	${posts}

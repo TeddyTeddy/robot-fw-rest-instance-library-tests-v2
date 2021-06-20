@@ -18,8 +18,9 @@ Get Number of Posts
 
 Fetch Posts From Database
 	[Documentation]		If start_index and end_index are provided, returns the posts
-	... 				from the database starting with page_start_index
-	...					and ending with page_end_index. Otherwise returns all the posts in the database
+	... 				from the database starting with page_start_index (inclusive, starting from zero)
+	...					and ending with page_end_index (exclusive).
+	...					Otherwise returns all the posts in the database
 	[Arguments]		${start_index}=${EMPTY}		${end_index}=${EMPTY}
 	${posts} = 		Fetch From Database 	posts
 	${is_range_provided} = 		Evaluate	$start_index!='' and $end_index!=''
