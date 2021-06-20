@@ -5,18 +5,18 @@
 
 2. Install json-server via npm:
    https://github.com/typicode/json-server#getting-started
-   npm install -g json-server
+   -  npm install -g json-server
 
 3. Open Terminal 1: Clone the repo:
-   git clone	https://github.com/TeddyTeddy/robot-fw-rest-instance-library-tests-v2.git
+   -  git clone	https://github.com/TeddyTeddy/robot-fw-rest-instance-library-tests-v2.git
 
 4. Terminal 1: At to the root of the cloned repo, execute:
-   python -m venv .venv/
-   source .venv/bin/activate
-   pip install -r requirements.txt
+   -  python -m venv .venv/
+   -  source .venv/bin/activate
+   -  pip install -r requirements.txt
 
 5. Open a new Terminal 2, go to the root of the cloned repo and execute:
-   json-server --watch db.json
+   -  json-server --watch db.json
 
 At this point, you should have a JSON REST API server running locally on your machine
 with the following output:
