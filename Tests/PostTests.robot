@@ -567,7 +567,8 @@ Deleting Post
 	Should Be Equal		${expected_post}		${post_read}
 
 Pagination Where Page Limit Exceeds Total Number Of Posts
-	[Documentation]		limit stands for the number of posts per page (e.g. NUMBER_OF_POSTS + 20)
+	[Documentation]		https://developer.atlassian.com/server/confluence/pagination-in-the-rest-api/
+	...					limit stands for the number of posts per page (e.g. NUMBER_OF_POSTS + 20)
 	...					total stands for the number of posts in the database (i.e. NUMBER_OF_POSTS)
 	...					When limit exceeds total, a single page must contain all the posts in the database
 	[Tags]	read-tested   pagination
@@ -583,7 +584,8 @@ Pagination Where Page Limit Exceeds Total Number Of Posts
 	${NUMBER_OF_POSTS + 100}
 
 Pagination Where Page Limit Equals To Total Number Of Posts
-	[Documentation]		limit stands for the number of posts per page (i.e. NUMBER_OF_POSTS)
+	[Documentation]		https://developer.atlassian.com/server/confluence/pagination-in-the-rest-api/
+	...					limit stands for the number of posts per page (i.e. NUMBER_OF_POSTS)
 	...					total stands for the number of posts in the database (i.e. NUMBER_OF_POSTS)
 	...					When limit equals to total, a single page must contain all the posts in the database
 	[Tags]	read-tested   pagination
@@ -591,7 +593,8 @@ Pagination Where Page Limit Equals To Total Number Of Posts
 	${NUMBER_OF_POSTS}
 
 Pagination Where Page Limit Is Less Than Total Number Of Posts
-	[Documentation]		limit stands for the number of posts per page (e.g. 8, 20 or 50)
+	[Documentation]		https://developer.atlassian.com/server/confluence/pagination-in-the-rest-api/
+	...					limit stands for the number of posts per page (e.g. 8, 20 or 50)
 	...					total stands for the number of posts in the database (i.e. NUMBER_OF_POSTS)
 	...					When limit is less than the total, a single page can only contain limit number of the posts
 	[Tags]	read-tested   pagination
