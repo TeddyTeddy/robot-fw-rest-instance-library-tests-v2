@@ -109,8 +109,22 @@ Get Comments For A Specific Post
 	[Return]	${comments}
 
 Get Sliced Posts
-	[Documentation]		start_index starts from 1 as we fetch from the API now
+	[Documentation]		start_index starts from 0 for slicing operation
 	[Arguments]			${start_index}		${end_index}
 	GET		/posts?_start=${start_index}&_end=${end_index}
+	${posts} =	Output		response body
+	[Return]	${posts}
+
+Get Sliced Posts Using Limit
+	[Documentation]		start_index starts from 0 for slicing operation
+	[Arguments]			${start_index}		${limit}
+	GET		/posts?_start=${start_index}&_limit=${limit}
+	${posts} =	Output		response body
+	[Return]	${posts}
+
+Get Posts With GTE, LTE And NE Values For Field Name One and Like Values For Field Name Two
+	[Documentation]		Add documentation
+	[Arguments]			${field_name_1}		${gte}		${lte}		${ne}		${field_name_2}		${like}
+	GET		/posts?${field_name_1}_gte=${gte}&${field_name_1}_lte=${lte}&${field_name_1}_ne=${ne}&${field_name_2}_like=${like}
 	${posts} =	Output		response body
 	[Return]	${posts}

@@ -760,7 +760,7 @@ Slicing Posts With All Possible Start And End Combinations
 	...					For each call, the test case fetches expected_posts from database for the same _start and _end.
 	...					It then compares the expected_posts with observed_posts. It also calculates the expected length
 	...					of observed_posts and compares that with the observed length of observed_posts
-	[Tags]	read-tested		slicing		run-me-only
+	[Tags]	read-tested		slicing		exclude
 
 	FOR  ${start_index}		IN RANGE		${0}	${NUMBER_OF_POSTS+10}
 		FOR  ${end_index}	IN RANGE		${start_index+1}	${NUMBER_OF_POSTS + 10 +1}
@@ -790,4 +790,103 @@ Slicing Posts With All Possible Start And End Combinations
 			Free Memory		${observed_posts}
 		END
 		Reload Library		REST
+	END
+
+Slicing Posts Ten Times With Different Start And Limit Values
+	[Documentation]		Referring to the API documentation:
+	...					GET /posts?_start=20&_limit=30
+	...					where _start is inclusive and _limit indicates the number of posts to be returned.
+	...					This test case make the above API call with a random set of _start and _limit values
+	...					and fetches expected_posts from database for the same _start and _limit.
+	...					It then compares the expected_posts with observed_posts. It also calculates the expected length
+	...					of observed_posts and compares that with the observed length of observed_posts
+	[Tags]	read-tested		slicing
+
+	FOR		${i}	IN RANGE 		10
+		# note that start_index starts from zero when posts are fetched from database
+		${start_index} =		Evaluate	random.randint(0, $NUMBER_OF_POSTS-1)  	modules=random
+		${limit} =				Evaluate	random.randint(1, $NUMBER_OF_POSTS)  	modules=random
+		${end_index} =			Evaluate	$start_index+$limit
+		${expected_posts} =		Fetch Posts From Database	${start_index}		${end_index}
+
+		# note that start_index starts from 0 too when posts are fetched via API call
+		# test call
+		${observed_posts} =		Get Sliced Posts Using Limit		${start_index}		${limit}
+		Should Be Equal			${expected_posts}		${observed_posts}
+		# note that start_index is between [0, NUMBER_OF_POSTS-1]
+		# limit is at least 1. So, we expect observed_posts to be a non-empty list at least containing 1 item
+		${observed_length} = 	Get Length				${observed_posts}
+		Should Not Be Equal		${0}		${observed_length}
+		# calculate expected_length of the observed_posts list
+		IF	${end_index} >= ${NUMBER_OF_POSTS}
+			${expected_length} =	Evaluate	$NUMBER_OF_POSTS-$start_index
+		ELSE
+			${expected_length} =	Set Variable	${limit}
+		END
+		Should Be Equal		${expected_length}		${observed_length}
+	END
+
+Slicing Posts With All Possible Start And End Combinations
+	[Documentation]		Referring to the API documentation:
+	...					GET /posts?_start=20&_limit=30
+	...					where _start is inclusive and _limit indicates the number of posts to be returned.
+	...					This test case make the above API call with all possible combinations of _start and _limit values.
+	...					For each call, the test case fetches expected_posts from database for the same _start and _limit.
+	...					It then compares the expected_posts with observed_posts. It also calculates the expected length
+	...					of observed_posts and compares that with the observed length of observed_posts
+	[Tags]	read-tested		slicing		run-me-only
+
+	FOR  ${start_index}		IN RANGE		${0}	${NUMBER_OF_POSTS+10}
+		FOR  ${limit}		IN RANGE		${1}	${NUMBER_OF_POSTS}
+
+			${end_index} =			Evaluate	$start_index+$limit
+			Log To Console	start_index:${start_index}
+			Log To Console	end_index:${end_index}
+			# note that start_index starts from zero when posts are fetched from database
+			${expected_posts} =		Fetch Posts From Database	${start_index}		${end_index}
+			# note that start_index starts from 0 too when posts are fetched via API call
+			# test call
+			${observed_posts} =		Get Sliced Posts Using Limit	${start_index}		${limit}
+			Should Be Equal			${expected_posts}		${observed_posts}
+			# note that start_index is between [0, NUMBER_OF_POSTS-1]
+			# and end_index is between [start_index+1, start_index+NUMBER_OF_POSTS]
+			# we expect observed_posts to be a non-empty list at least containing 1 item
+			${observed_length} = 			Get Length				${observed_posts}
+			# calculate expected_length of the observed_posts list
+			IF	${end_index} < ${NUMBER_OF_POSTS}
+				${expected_length} =	Set Variable	${limit}
+			ELSE IF	${end_index} >= ${NUMBER_OF_POSTS} and ${start_index} < ${NUMBER_OF_POSTS}
+				${expected_length} =	Evaluate	$NUMBER_OF_POSTS-$start_index
+			ELSE
+				${expected_length} =	Set Variable	${0}
+			END
+			Should Be Equal		${expected_length}		${observed_length}
+
+			Free Memory		${expected_posts}
+			Free Memory		${observed_posts}
+		END
+		Reload Library		REST
+	END
+
+Fetching Posts Ten Times With different GTE, LTE And NE Values For Id field and Different Like Values For Title Field
+	[Documentation]		Note that GTE (greater than or equal to) starts from index 0
+	[Tags]	read-tested		operators	gte		lte		ne	like
+
+	FOR  ${i}		IN RANGE		10
+		${gte} = 	Evaluate 	random.randint(0, $NUMBER_OF_POSTS-1)  	modules=random
+		${lte} =	Evaluate 	random.randint($gte, $NUMBER_OF_POSTS-1)  	modules=random
+		${ne} = 	Evaluate 	random.randint($gte, $lte)  	modules=random
+
+		${expected_posts} =		Fetch Posts From Database With GTE and LTE For A Field		id		${gte}		${lte}
+		# expected_posts is modified in place
+		# note that ne starts from index 0 and id starts from index 1
+		Filter Out Resource List By  ${expected_posts}  	id  	${ne}
+		${random_title_keyword} = 	Pick A Random Title Keyword		${expected_posts}
+		# expected_posts is modified in place
+		Filter In Resource List Using Like  ${expected_posts}  title 	${random_title_keyword}
+		# at this point, expected_posts does represent what we must see from the API call
+		# Now we can make the test call
+		${observed_posts}= 		Get Posts With GTE, LTE And NE Values For Field Name One and Like Values For Field Name Two
+		...		id		${gte}		${lte}		${ne}		title		${random_title_keyword}
+		Should Be Equal			${expected_posts}		${observed_posts}
 	END

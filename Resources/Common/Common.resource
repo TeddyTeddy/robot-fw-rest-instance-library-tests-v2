@@ -90,16 +90,58 @@ Calculate Link Header Without Limit Included
 	END
 	[Return]	${link_header}
 
-Filter Resource List By
+Filter In Resource List By
 	[Documentation]		Given a list of resources, which are dictionaries, this keyword returns the resources
 	...					having field_name with field_value
 	[Arguments]			${resources_list}		${field_name}		${field_value}
-	# result is an empty list at the beginning
-	${result} =			Create List
 	FOR		${resource}		IN 		@{resources_list}
 		${is_match} = 		Evaluate	$field_name in $resource and $resource[$field_name]==$field_value
-		IF	${is_match}
-			Append To List		${result}		${resource}
+		IF	not ${is_match}
+			${index} = 		Get Index From List		${resources_list}		${resource}
+			Remove From List	${resources_list}	${index}
 		END
 	END
-	[Return]		${result}
+
+Filter Out Resource List By
+	[Documentation]		Given a list of resources, which are dictionaries, this keyword returns the resources
+	...					NOT having field_name with field_value
+	[Arguments]			${resources_list}		${field_name}		${field_value}
+	FOR		${resource}		IN 		@{resources_list}
+		${is_match} = 		Evaluate	$field_name in $resource and $resource[$field_name]==$field_value
+		IF 	${is_match}
+			${index} = 		Get Index From List		${resources_list}		${resource}
+			Remove From List	${resources_list}	${index}
+		END
+	END
+
+Pick A Random Title Keyword
+	[Documentation]			Picks a random post from the given list of posts
+	...						Then picks a random keyword from the post's title
+	[Arguments]			${posts}
+	${length} = 				Get Length		${posts}
+	IF		${length}>0
+		${index} = 					Evaluate 	random.randint(0, $length-1)  	modules=random
+		${random_post} =			Evaluate	$posts[$index]
+		${title} =					Evaluate	$random_post['title']
+		${title_keywords} = 		Evaluate	re.split(r' ', $title)		modules=re
+		${title_keywords_length} = 	Get Length		${title_keywords}
+		${index} = 					Evaluate 	random.randint(0, $title_keywords_length-1)  	modules=random
+		${random_title_keyword} =	Evaluate	$title_keywords[$index]
+	ELSE
+		${random_title_keyword} = 	Set Variable	${EMPTY}
+	END
+	[Return]	${random_title_keyword}
+
+Filter In Resource List Using Like
+	[Documentation]		Given a list of resources, which are dictionaries, this keyword returns the resources
+	...					having field_name containing a field_value. For example field_name can be title and
+	...					field_value can be "lorem". All resources having "lorem" in title will be returned.
+	[Arguments]			${resources_list}		${field_name}		${field_value}
+	# result is an empty list at the beginning
+	FOR		${resource}		IN 		@{resources_list}
+		${is_match} = 		Evaluate	bool(re.search(r'\\.*${field_value}\\.*', $resource[$field_name]))		modules=re
+		IF	not ${is_match}
+			${index} = 		Get Index From List		${resources_list}		${resource}
+			Remove From List	${resources_list}	${index}
+		END
+	END

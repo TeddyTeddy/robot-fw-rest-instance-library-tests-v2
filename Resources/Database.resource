@@ -29,12 +29,27 @@ Fetch Posts From Database
 	END
 	[Return]		${posts}
 
+Fetch Posts From Database With GTE and LTE For A Field
+	[Documentation]		Given field_name (e.g. id) returns all the posts
+	...					whose id stays in the range [gte, lte] for that field_name
+	[Arguments]			${field_name}		${gte}		${lte}
+	${posts} = 		Fetch From Database 	posts
+	FOR		${post}		IN 		@{posts}
+		${is_match} = 	Evaluate	$post[$field_name] >= $gte and $post[$field_name] <= $lte
+		IF    not ${is_match}
+			${index} = 		Get Index From List		${posts}		${post}
+			Remove From List	${posts}	${index}
+		END
+	END
+	[Return]	${posts}
+
 Fetch Comments from Database
 	[Documentation]		Returns the comments from the database for the given post with post_id
 	...					Sorts the comments by the field in the given order
 	[Arguments]			${post_id}		${field}		${order}
 	${comments} = 		Fetch From Database 	comments
-	${comments} =		Filter Resource List By 		${comments}		postId		${post_id}
+	# comments is modified in place
+	Filter In Resource List By 		${comments}		postId		${post_id}
 	${comments} =		Sort Resource List		${comments}	 	${field}	${order}
 	[Return]	${comments}
 
@@ -42,7 +57,9 @@ Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
 	[Documentation]		Returns the comments with a given post_id
 	[Arguments]			${post_id}		${field_1}		${order_1}	  	${field_2}		${order_2}
 	${comments} = 		Fetch From Database 	comments
-	${comments} =		Filter Resource List By 		${comments}		postId		${post_id}
+	# comments is modified in place
+	Filter In Resource List By 		${comments}		postId		${post_id}
 	${comments} =		Sort Resource List		${comments}	 	${field_1}	${order_1}
 	${comments} =		Sort Resource List		${comments}	 	${field_2}	${order_2}
 	[Return]			${comments}
+
