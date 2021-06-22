@@ -867,12 +867,23 @@ Slicing Posts With All Possible Start And End Combinations
 
 			Free Memory		${expected_posts}
 			Free Memory		${observed_posts}
+			Reload Library		REST
 		END
-		Reload Library		REST
 	END
 
 Fetching Posts Ten Times With different GTE, LTE And NE Values For Id field and Different Like Values For Title Field
-	[Documentation]		Note that GTE (greater than or equal to) starts from index 0
+	[Documentation]			GTE (greater than or equal to) follows the id range [1,inf]
+	...						LTE (less than or equal to) has a range [GTE, inf]
+	...						NE is a random number between [GTE, LTE]
+	...						(1) We fetch the posts, whose id is between [GTE, LTE]
+	...						(2) The posts in (1) is filtered such that only the posts whose id is not eqal to NE
+	...						stays in the posts list.
+	...						(3) Title field for a post (e.g. Lorem ipsum ador) will be searched for a random_title_keyword
+	...						If a post contains the random_title_keyword in its title field, only then the post will be
+	...						present in expected_posts. Otherwise, the post will be removed from expected_posts.
+	...						(4) We make the following call to the API:
+	...						GET		/posts?id_gte=${gte}&id_lte=${lte}&id_ne=${ne}&title_like=${like}
+
 	[Tags]	read-tested		operators	gte		lte		ne	like
 
 	FOR  ${i}		IN RANGE		10
@@ -880,15 +891,15 @@ Fetching Posts Ten Times With different GTE, LTE And NE Values For Id field and 
 		${lte} =	Evaluate 	random.randint($gte, $NUMBER_OF_POSTS-1)  	modules=random
 		${ne} = 	Evaluate 	random.randint($gte, $lte)  	modules=random
 
+		# (1) We fetch the posts, whose id is between [GTE, LTE]
 		${expected_posts} =		Fetch Posts From Database With GTE and LTE For A Field		id		${gte}		${lte}
-		# expected_posts is modified in place
-		# note that ne starts from index 0 and id starts from index 1
+		# (2) expected_posts is modified in place
 		Filter Out Resource List By  ${expected_posts}  	id  	${ne}
 		${random_title_keyword} = 	Pick A Random Title Keyword		${expected_posts}
-		# expected_posts is modified in place
+		# (3) expected_posts is modified in place
 		Filter In Resource List Using Like  ${expected_posts}  title 	${random_title_keyword}
 		# at this point, expected_posts does represent what we must see from the API call
-		# Now we can make the test call
+		# (4) Now we can make the test call
 		${observed_posts}= 		Get Posts With GTE, LTE And NE Values For Field Name One and Like Values For Field Name Two
 		...		id		${gte}		${lte}		${ne}		title		${random_title_keyword}
 		Should Be Equal			${expected_posts}		${observed_posts}

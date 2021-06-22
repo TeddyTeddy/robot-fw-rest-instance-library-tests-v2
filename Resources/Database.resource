@@ -22,12 +22,14 @@ Fetch Posts From Database
 	...					and ending with page_end_index (exclusive).
 	...					Otherwise returns all the posts in the database
 	[Arguments]		${start_index}=${EMPTY}		${end_index}=${EMPTY}
-	${posts} = 		Fetch From Database 	posts
+	${all_posts} = 		Fetch From Database 	posts
 	${is_range_provided} = 		Evaluate	$start_index!='' and $end_index!=''
 	IF	${is_range_provided}
-		${posts} =		Evaluate		$posts[$start_index:$end_index]
+		${ranged_posts} =		Evaluate		$all_posts[$start_index:$end_index]
+		Free Memory		${all_posts}
+		Return From Keyword		${ranged_posts}
 	END
-	[Return]		${posts}
+	[Return]	${all_posts}
 
 Fetch Posts From Database With GTE and LTE For A Field
 	[Documentation]		Given field_name (e.g. id) returns all the posts
@@ -50,8 +52,9 @@ Fetch Comments from Database
 	${comments} = 		Fetch From Database 	comments
 	# comments is modified in place
 	Filter In Resource List By 		${comments}		postId		${post_id}
-	${comments} =		Sort Resource List		${comments}	 	${field}	${order}
-	[Return]	${comments}
+	${sorted_comments} =		Sort Resource List		${comments}	 	${field}	${order}
+	Free Memory		${comments}
+	[Return]	${sorted_comments}
 
 Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
 	[Documentation]		Returns the comments with a given post_id
@@ -59,7 +62,9 @@ Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
 	${comments} = 		Fetch From Database 	comments
 	# comments is modified in place
 	Filter In Resource List By 		${comments}		postId		${post_id}
-	${comments} =		Sort Resource List		${comments}	 	${field_1}	${order_1}
-	${comments} =		Sort Resource List		${comments}	 	${field_2}	${order_2}
-	[Return]			${comments}
+	${phase_1_sorted_comments} =		Sort Resource List		${comments}	 	${field_1}	${order_1}
+	Free Memory		${comments}
+	${final_sorted_comments} =		Sort Resource List		${phase_1_sorted_comments}	 	${field_2}	${order_2}
+	Free Memory		${phase_1_sorted_comments}
+	[Return]			${final_sorted_comments}
 
