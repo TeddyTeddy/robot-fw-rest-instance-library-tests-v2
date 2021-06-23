@@ -123,8 +123,32 @@ Get Sliced Posts Using Limit
 	[Return]	${posts}
 
 Get Posts With GTE, LTE And NE Values For Field Name One and Like Values For Field Name Two
-	[Documentation]		Add documentation
+	[Documentation]		Keep in mind that we are making a GET request for a post resource.
+	...					For a given field name_1 (e.g. id) then we use 3 operators:
+	...					GTE (greater than or equal to) (e.g. 10)
+	...					LTE (less than or equal to) (e.g. 20)
+	...					NE (not equal to) (e.g. 15)
+	...					For a given field name_2 (e.g. title) we use a Like value (e.g. lorem)
+	...					So, given the example values, we would make:
+	...					GET		/posts?id_gte=10&id_lte=20&id=15&title_like=lorem
+	...					The response body of this call would be a list of posts matching the GTE, LTE, NE and
+	...					Like criterias.
 	[Arguments]			${field_name_1}		${gte}		${lte}		${ne}		${field_name_2}		${like}
 	GET		/posts?${field_name_1}_gte=${gte}&${field_name_1}_lte=${lte}&${field_name_1}_ne=${ne}&${field_name_2}_like=${like}
+	${posts} =	Output		response body
+	[Return]	${posts}
+
+Get A Post With Its Comments
+	[Documentation]		Given a post id (e.g. 1), we make the following GET call:
+	...					GET /posts/1?_embed=comments
+	...					The response body of this call would be a post having "comments" item
+	...					which is a list of comments.
+	[Arguments]			${id}
+	GET 				/posts/${id}?_embed=comments
+	${post} =	Output		response body
+	[Return]	${post}
+
+Get All Posts With Their Comments Via Embed
+	GET 				/posts/?_embed=comments
 	${posts} =	Output		response body
 	[Return]	${posts}

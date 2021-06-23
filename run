@@ -1,1 +1,1 @@
-robot --pythonpath Libraries/	--report	NONE	--loglevel NONE	--exclude exclude	--include run-me-only	-d Results/		Tests/
+robot --pythonpath Libraries/	--exclude exclude	--include run-me-only	-d Results/		Tests/

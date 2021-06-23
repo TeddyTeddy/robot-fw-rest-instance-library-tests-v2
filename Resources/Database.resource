@@ -68,3 +68,32 @@ Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
 	Free Memory		${phase_1_sorted_comments}
 	[Return]			${final_sorted_comments}
 
+Fetch A Post From Database Matching
+	[Documentation]		given field_name (e.g. id) and value (e.g. 5), this keyword returns the post whose field_name
+	...					matches value
+	[Arguments]			${field_name}		${field_value}
+	${posts} = 			Fetch From Database 	posts
+	FOR		${post}		IN 		@{posts}
+		${is_match} = 	Evaluate	$post[$field_name] == $field_value
+		IF  ${is_match}
+			Free Memory		${posts}
+			Return From Keyword		${post}
+		END
+	END
+	[Return]	${EMPTY}
+
+Add Comments To Post
+	[Documentation]		Given the post, it will add "comments" field having a list of all the comments for that post.
+	...					A comment belongs to a post if its postId matches the posts id
+	[Arguments]			${post}
+	${all_comments} = 		Fetch From Database 	comments
+	${posts_comments} =		Create List
+	FOR		${comment}		IN 		@{all_comments}
+		${is_match} =		Evaluate	$comment['postId'] == $post['id']
+		IF		${is_match}
+			Append To List		${posts_comments}		${comment}
+		END
+	END
+	Set To Dictionary		${post}		comments=${posts_comments}
+	Free Memory		${all_comments}
+

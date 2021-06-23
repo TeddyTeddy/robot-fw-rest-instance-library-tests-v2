@@ -763,7 +763,7 @@ Slicing Posts With All Possible Start And End Combinations
 	...					For each call, the test case fetches expected_posts from database for the same _start and _end.
 	...					It then compares the expected_posts with observed_posts. It also calculates the expected length
 	...					of observed_posts and compares that with the observed length of observed_posts
-	[Tags]	read-tested		slicing		run-me-only
+	[Tags]	read-tested		slicing
 
 	FOR  ${start_index}		IN RANGE		${0}	${NUMBER_OF_POSTS+10}
 		FOR  ${end_index}	IN RANGE		${start_index+1}	${NUMBER_OF_POSTS + 10 +1}
@@ -904,4 +904,52 @@ Fetching Posts Ten Times With different GTE, LTE And NE Values For Id field and 
 		${observed_posts}= 		Get Posts With GTE, LTE And NE Values For Field Name One and Like Values For Field Name Two
 		...		id		${gte}		${lte}		${ne}		title		${random_title_keyword}
 		Should Be Equal			${expected_posts}		${observed_posts}
+	END
+
+Fetching All Posts With Their Comments Via Embed
+	[Documentation]			Referring to the API documentation:
+	...						GET /posts/?_embed=comments
+	...						This API call returns all the post resources with their respective comments.
+	...						For each post, there is a comments item having a list of comments.
+	...						(1) This test case fetches the expected_posts with id from database along with their respective comments
+	...						(2) It makes the API call returning observed_posts with their respective comments
+	...						Then this test case compare the observed_posts with the expected_posts
+	[Tags]	read-tested		embed
+	# (1)
+	${expected_posts} = 	Create List
+	FOR  ${id}		IN RANGE		${1}	${NUMBER_OF_POSTS+1}
+		${expected_post} = 			Fetch A Post From Database Matching		id		${id}
+		# post will be added "comments" field having a list of comments
+		Add Comments To Post		${expected_post}
+		Append To List		${expected_posts}		${expected_post}
+	END
+
+	# at this moment, expected_posts contain posts, where each post has comments item having a list of comments
+	# (2) test call
+	${observed_posts} = 		Get All Posts With Their Comments Via Embed
+	# if you want to compare the JSON formatted expected_posts and observed_posts
+	# https://jsonformatter.org/json-parser
+	Should Be Equal				${expected_posts}		${observed_posts}
+
+Fetching A Post With Its Comments Via Embed
+	[Documentation]			Referring to the API documentation:
+	...						GET /posts/1?_embed=comments
+	...						For a given post id (e.g. 1) the above API call returns the post together with its comments.
+	...						(1) This test case fetches the expected_post with id from database along with its comments
+	...						(2) It makes the API call returning observed_post
+	...						Then this test case compare the observed_post with the expected_post
+	[Tags]	read-tested		embed
+	FOR  ${id}		IN RANGE		${1}	${NUMBER_OF_POSTS}
+		# (1)
+		${expected_post} = 			Fetch A Post From Database Matching		id		${id}
+		# post will be added "comments" field having a list of comments
+		Add Comments To Post		${expected_post}
+		# (2) test call
+		${observed_post} = 			Get A Post With Its Comments	${id}
+		Should Be Equal				${expected_post}		${observed_post}
+		# Freeing memory via del command in Python does not help to keep the memory usage in check
+		# whether the code below is commented in or out, the memory usage keeps growing steadily.
+		# Free Memory		${expected_post}
+		# Free Memory		${observed_post}
+		# Log		${expected_post}
 	END
