@@ -170,7 +170,7 @@ Reading Post By Filtering Id & Title
 	Should Be Equal		${1}	${observed_length}
 	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
 
-Reading Post By Filtering UserId and Title
+Reading Post By Filtering UserId And Title
 	[Documentation]			Reads posts by providing a filter containing a userId value and a title value
 	...						Expects that the returned post list contains only one post
 	...						Expects that the post matches with the expected post
@@ -181,7 +181,7 @@ Reading Post By Filtering UserId and Title
 	Should Be Equal		${1}	${observed_length}
 	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
 
-Reading Post By Filtering UserId, Id and Title
+Reading Post By Filtering UserId, Id And Title
 	[Documentation]			Reads posts by providing a filter containing a userId value, id value and a title value
 	...						Expects that the returned post list contains only one post
 	...						Expects that the post matches with the expected post
@@ -250,9 +250,9 @@ Updating Post Body
 	# expected_post got updated with "body"=${NEW_BODY}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Update Post UserId & Title
+Updating Post UserId & Title
 	[Documentation]			Creates a post with JSON_POST (1) and updates its "title" and "userId" items locally
-	...						Then uses the local post to update the one in the server via Update Post keyword.
+	...						Then uses the local post to update the one in the server via Updating Post keyword.
 	...						Checks that the post resource in the server got updated
 	...						by calling Verify Post Updated
 	[Tags]		create	read	update-tested
@@ -268,7 +268,7 @@ Update Post UserId & Title
 	Update Post		${post_id}		${expected_post}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Update Post Title & Body
+Updating Post Title & Body
 	[Documentation]			Creates a post with JSON_POST (1) and updates its "title" and "body" items locally
 	...						Then uses the local post to update the one in the server via Update Post keyword.
 	...						Checks that the post resource in the server got updated
@@ -286,7 +286,7 @@ Update Post Title & Body
 	Update Post		${post_id}		${expected_post}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Update Post UserId & Body
+Updating Post UserId & Body
 	[Documentation]			Creates a post with JSON_POST (1) and updates its "userId" and "body" items locally
 	...						Then uses the local post to update the one in the server via Update Post keyword.
 	...						Checks that the post resource in the server got updated
@@ -304,7 +304,7 @@ Update Post UserId & Body
 	Update Post		${post_id}		${expected_post}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Update All Fields Except Id In Post
+Updating All Fields Except Id In Post
 	[Documentation]			Creates a post with JSON_POST (1) and updates its "userId", "title" and "body" locally
 	...						Then uses the local post to update the one in the server via Update Post keyword.
 	...						Checks that the post resource in the server got updated
@@ -397,7 +397,7 @@ Attempting To Remove All Fields Including Id In Post
 	# verify that post resource has only id field with post_id value
 	Verify Post Updated		${post_id}		${expected_post}
 
-Remove All Fields Except Id In Post
+Removing All Fields Except Id In Post
 	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
 	...						we can erase all fields (except id) by not providing unwanted key/value pairs
 	...						in the provided JSON. For example, if we want to get rid of post title,
@@ -420,7 +420,7 @@ Remove All Fields Except Id In Post
 	Update Post		${post_id}		${expected_post}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Remove Title From Post
+Removing Title From Post
 	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
 	...						we can erase all fields (except id) by not providing unwanted key/value pairs
 	...						in the provided JSON. For example, if we want to get rid of post title,
@@ -441,7 +441,7 @@ Remove Title From Post
 	Update Post		${post_id}		${expected_post}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Remove Body From Post
+Removing Body From Post
 	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
 	...						we can erase all fields (except id) by not providing unwanted key/value pairs
 	...						in the provided JSON. For example, if we want to get rid of post body,
@@ -462,7 +462,7 @@ Remove Body From Post
 	Update Post		${post_id}		${expected_post}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Remove UserId From Post
+Removing UserId From Post
 	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
 	...						we can erase all fields (except id) by not providing unwanted key/value pairs
 	...						in the provided JSON. For example, if we want to get rid of post userId,
@@ -483,7 +483,7 @@ Remove UserId From Post
 	Update Post		${post_id}		${expected_post}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Remove Title And Body In Post
+Removing Title And Body In Post
 	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
 	...						we can erase all fields (except id) by not providing unwanted key/value pairs
 	...						in the provided JSON. For example, if we want to get rid of post title and body,
@@ -505,7 +505,7 @@ Remove Title And Body In Post
 	Update Post		${post_id}		${expected_post}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Remove Title And UserId In Post
+Removing Title And UserId In Post
 	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
 	...						we can erase all fields (except id) by not providing unwanted key/value pairs
 	...						in the provided JSON. For example, if we want to get rid of post title and userId,
@@ -527,7 +527,7 @@ Remove Title And UserId In Post
 	Update Post		${post_id}		${expected_post}
 	Verify Post Updated		${post_id}		${expected_post}
 
-Remove Body And UserId In Post
+Removing Body And UserId In Post
 	[Documentation]			Technically, when we make a PUT request with a provided JSON data,
 	...						we can erase all fields (except id) by not providing unwanted key/value pairs
 	...						in the provided JSON. For example, if we want to get rid of post body and userId,
@@ -626,7 +626,7 @@ Sorting Posts By Id In Descending Order
 	${observed_posts} =		Get Posts By Id In Descending Order
 	Should Be Equal		${expected_posts}		${observed_posts}
 
-Sorting Comments For A Specific Post By Id in Descending Order
+Sorting Comments For A Specific Post By Id In Descending Order
 	[Documentation]		Upon GET /posts/1/comments?_sort=id&_order=desc, we should get a list of comments
 	...					belonging to post with id=1 which are sorted by comment id in descending order
 	[Tags]	read-tested 	sorting
@@ -638,7 +638,7 @@ Sorting Comments For A Specific Post By Id in Descending Order
 	Should Be Equal			${expected_comments}		${observed_comments}
 
 
-Sorting Comments For A Specific Post By Id in Ascending Order
+Sorting Comments For A Specific Post By Id In Ascending Order
 	[Documentation]		Upon GET /posts/1/comments?_sort=id&_order=asc, we should get a list of comments
 	...					belonging to post with id=1 which are sorted by comment id in ascending order
 	[Tags]	read-tested 	sorting
@@ -872,7 +872,7 @@ Slicing Posts With All Possible Start And Limit Combinations
 		END
 	END
 
-Fetching Posts Ten Times With different GTE, LTE And NE Values For Id field and Different Like Values For Title Field
+Fetching Posts Ten Times With Different GTE, LTE And NE Values For Id Field And Different Like Values For Title Field
 	[Documentation]			GTE (greater than or equal to) follows the id range [1,inf]
 	...						LTE (less than or equal to) has a range [GTE, inf]
 	...						NE is a random number between [GTE, LTE]
