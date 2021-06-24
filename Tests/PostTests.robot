@@ -763,10 +763,10 @@ Slicing Posts With All Possible Start And End Combinations
 	...					For each call, the test case fetches expected_posts from database for the same _start and _end.
 	...					It then compares the expected_posts with observed_posts. It also calculates the expected length
 	...					of observed_posts and compares that with the observed length of observed_posts
-	[Tags]	read-tested		slicing
+	[Tags]	read-tested		slicing		run-me-only
 
 	FOR  ${start_index}		IN RANGE		${0}	${NUMBER_OF_POSTS+10}
-		FOR  ${end_index}	IN RANGE		${start_index+1}	${NUMBER_OF_POSTS + 10 +1}
+		FOR  ${end_index}	IN RANGE		${start_index+1}	${NUMBER_OF_POSTS +10 +1}
 			Log To Console	start_index:${start_index}
 			Log To Console	end_index:${end_index}
 			# note that start_index starts from zero when posts are fetched from database
