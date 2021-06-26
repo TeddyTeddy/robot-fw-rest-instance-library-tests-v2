@@ -1,0 +1,24 @@
+{
+  "name": "robot-fw-rest-instance-library-tests-v2",
+  "version": "1.0.0",
+  "description": "1. Install node v16.3.0 on your machine:    https://github.com/nodesource/distributions/blob/master/README.md",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeddyTeddy/robot-fw-rest-instance-library-tests-v2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TeddyTeddy/robot-fw-rest-instance-library-tests-v2/issues"
+  },
+  "homepage": "https://github.com/TeddyTeddy/robot-fw-rest-instance-library-tests-v2#readme",
+  "devDependencies": {
+    "json-server": "^0.16.3"
+  }
+}
