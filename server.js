@@ -6,7 +6,8 @@ const middlewares = jsonServer.defaults();
 server.use(middlewares);
 server.use((req, res, next) => {
 	function isAuthorized(req) {
-		if (req.privateKey=='1234567') {
+		// console.log(req.get('privateKey'))
+		if (req.get('privateKey')=='1234567') {
 			return true
 		}
 		return false
