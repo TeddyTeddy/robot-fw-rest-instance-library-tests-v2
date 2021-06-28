@@ -1,62 +1,62 @@
-robot --pythonpath Libraries/	-d Results/	 -o 1.xml	--report None	-t Creating\ Post				Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 2.xml	--report None   -t Reading\ All\ Posts			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 3.xml	--report None   -t Reading\ Post\ By\ Id		Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 1.xml	--report None	-t Creating\ Post				Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 2.xml	--report None   -t Reading\ All\ Posts			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 3.xml	--report None   -t Reading\ Post\ By\ Id		Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 4.xml	--report None   -t Reading\ Post\ By\ Filtering\ Id			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 5.xml	--report None   -t Reading\ Post\ By\ Filtering\ Title			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 6.xml	--report None   -t Reading\ Post\ By\ Filtering\ Id\ &\ Title				Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 4.xml	--report None   -t Reading\ Post\ By\ Filtering\ Id			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 5.xml	--report None   -t Reading\ Post\ By\ Filtering\ Title			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 6.xml	--report None   -t Reading\ Post\ By\ Filtering\ Id\ &\ Title				Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 7.xml	--report None   -t Reading\ Post\ By\ Filtering\ UserId\ And\ Title			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 8.xml	--report None   -t Reading\ Post\ By\ Filtering\ UserId,\ Id\ And\ Title	Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 9.xml	--report None   -t Reading\ Post\ By\ Filtering\ UserId\ And\ Id			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 7.xml	--report None   -t Reading\ Post\ By\ Filtering\ UserId\ And\ Title			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 8.xml	--report None   -t Reading\ Post\ By\ Filtering\ UserId,\ Id\ And\ Title	Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 9.xml	--report None   -t Reading\ Post\ By\ Filtering\ UserId\ And\ Id			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 10.xml	--report None   -t Updating\ Post\ UserId			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 11.xml	--report None   -t Updating\ Post\ Title			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 12.xml	--report None   -t Updating\ Post\ Body			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 10.xml	--report None   -t Updating\ Post\ UserId			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 11.xml	--report None   -t Updating\ Post\ Title			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 12.xml	--report None   -t Updating\ Post\ Body			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 13.xml	--report None   -t Updating\ Post\ UserId\ &\ Title			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 14.xml	--report None   -t Updating\ Post\ Title\ &\ Body				Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 15.xml	--report None   -t Updating\ Post\ UserId\ &\ Body			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 13.xml	--report None   -t Updating\ Post\ UserId\ &\ Title			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 14.xml	--report None   -t Updating\ Post\ Title\ &\ Body				Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 15.xml	--report None   -t Updating\ Post\ UserId\ &\ Body			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 16.xml	--report None   -t Updating\ All\ Fields\ Except\ Id\ In\ Post			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 17.xml	--report None   -t Attempting\ To\ Update\ Id\ In\ Post				Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 18.xml	--report None   -t Add\ Additional\ Tags\ Field\ To\ Post			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 16.xml	--report None   -t Updating\ All\ Fields\ Except\ Id\ In\ Post			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 17.xml	--report None   -t Attempting\ To\ Update\ Id\ In\ Post				Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 18.xml	--report None   -t Add\ Additional\ Tags\ Field\ To\ Post			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 19.xml	--report None   -t Attempting\ To\ Remove\ All\ Fields\ Including\ Id\ In\ Post			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 20.xml	--report None   -t Removing\ All\ Fields\ Except\ Id\ In\ Post				Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 21.xml	--report None   -t Removing\ Title\ From\ Post			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 19.xml	--report None   -t Attempting\ To\ Remove\ All\ Fields\ Including\ Id\ In\ Post			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 20.xml	--report None   -t Removing\ All\ Fields\ Except\ Id\ In\ Post				Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 21.xml	--report None   -t Removing\ Title\ From\ Post			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 22.xml	--report None   -t Removing\ Body\ From\ Post			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 23.xml	--report None   -t Removing\ UserId\ From\ Post				Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 24.xml	--report None   -t Removing\ Title\ And\ Body\ In\ Post			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 22.xml	--report None   -t Removing\ Body\ From\ Post			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 23.xml	--report None   -t Removing\ UserId\ From\ Post				Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 24.xml	--report None   -t Removing\ Title\ And\ Body\ In\ Post			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 25.xml	--report None   -t Removing\ Title\ And\ UserId\ In\ Post			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 26.xml	--report None   -t Removing\ Body\ And\ UserId\ In\ Post				Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 27.xml	--report None   -t Deleting\ Post			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 25.xml	--report None   -t Removing\ Title\ And\ UserId\ In\ Post			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 26.xml	--report None   -t Removing\ Body\ And\ UserId\ In\ Post				Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 27.xml	--report None   -t Deleting\ Post			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 28.xml	--report None   -t Pagination\ Where\ Page\ Limit\ Exceeds\ Total\ Number\ Of\ Posts		Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 29.xml	--report None   -t Pagination\ Where\ Page\ Limit\ Equals\ To\ Total\ Number\ Of\ Posts				Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 30.xml	--report None   -t Pagination\ Where\ Page\ Limit\ Is\ Less\ Than\ Total\ Number\ Of\ Posts			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 28.xml	--report None   -t Pagination\ Where\ Page\ Limit\ Exceeds\ Total\ Number\ Of\ Posts		Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 29.xml	--report None   -t Pagination\ Where\ Page\ Limit\ Equals\ To\ Total\ Number\ Of\ Posts				Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 30.xml	--report None   -t Pagination\ Where\ Page\ Limit\ Is\ Less\ Than\ Total\ Number\ Of\ Posts			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 31.xml	--report None   -t Sorting\ Posts\ By\ Id\ In\ Ascending\ Order		Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 32.xml	--report None   -t Sorting\ Posts\ By\ Id\ In\ Descending\ Order			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 33.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ In\ Descending\ Order			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 31.xml	--report None   -t Sorting\ Posts\ By\ Id\ In\ Ascending\ Order		Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 32.xml	--report None   -t Sorting\ Posts\ By\ Id\ In\ Descending\ Order			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 33.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ In\ Descending\ Order			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 34.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ In\ Ascending\ Order		Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 35.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ \(Asc\)\ And\ By\ Email\ \(Asc\)			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 36.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ \(Desc\)\ And\ By\ Email\ \(Asc\)			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 34.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ In\ Ascending\ Order		Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 35.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ \(Asc\)\ And\ By\ Email\ \(Asc\)			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 36.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ \(Desc\)\ And\ By\ Email\ \(Asc\)			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 37.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ \(Asc\)\ And\ By\ Email\ \(Desc\)		Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 38.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ \(Desc\)\ And\ By\ Email\ \(Desc\)			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 39.xml	--report None   -t Slicing\ Posts\ Ten\ Times\ With\ Different\ Start\ And\ End\ Values			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 37.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ \(Asc\)\ And\ By\ Email\ \(Desc\)		Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 38.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ \(Desc\)\ And\ By\ Email\ \(Desc\)			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 39.xml	--report None   -t Slicing\ Posts\ Ten\ Times\ With\ Different\ Start\ And\ End\ Values			Tests/AuthorizedUser/PostTests.robot
 
-# robot --pythonpath Libraries/	-d Results/	 -o 40.xml	--report None   -t Slicing\ Posts\ With\ All\ Possible\ Start\ And\ End\ Combinations		Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 41.xml	--report None   -t Slicing\ Posts\ Ten\ Times\ With\ Different\ Start\ And\ Limit\ Values			Tests/PostTests.robot
-# robot --pythonpath Libraries/	-d Results/	 -o 42.xml	--report None   -t Slicing\ Posts\ With\ All\ Possible\ Start\ And\ Limit\ Combinations			Tests/PostTests.robot
+# robot --pythonpath Libraries/	-d Results/	 -o 40.xml	--report None   -t Slicing\ Posts\ With\ All\ Possible\ Start\ And\ End\ Combinations		Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 41.xml	--report None   -t Slicing\ Posts\ Ten\ Times\ With\ Different\ Start\ And\ Limit\ Values			Tests/AuthorizedUser/PostTests.robot
+# robot --pythonpath Libraries/	-d Results/	 -o 42.xml	--report None   -t Slicing\ Posts\ With\ All\ Possible\ Start\ And\ Limit\ Combinations			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 43.xml	--report None   -t Fetching\ Posts\ Ten\ Times\ With\ Different\ GTE,\ LTE\ And\ NE\ Values\ For\ Id\ Field\ And\ Different\ Like\ Values\ For\ Title\ Field		Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 44.xml	--report None   -t Fetching\ All\ Posts\ With\ Their\ Comments\ Via\ Embed			Tests/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 45.xml	--report None   -t Fetching\ A\ Post\ With\ Its\ Comments\ Via\ Embed			Tests/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 43.xml	--report None   -t Fetching\ Posts\ Ten\ Times\ With\ Different\ GTE,\ LTE\ And\ NE\ Values\ For\ Id\ Field\ And\ Different\ Like\ Values\ For\ Title\ Field		Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 44.xml	--report None   -t Fetching\ All\ Posts\ With\ Their\ Comments\ Via\ Embed			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 45.xml	--report None   -t Fetching\ A\ Post\ With\ Its\ Comments\ Via\ Embed			Tests/AuthorizedUser/PostTests.robot
 
 
 rebot --merge --outputdir Results/  Results/*.xml

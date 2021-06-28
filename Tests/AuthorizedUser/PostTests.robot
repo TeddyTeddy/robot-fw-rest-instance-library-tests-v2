@@ -213,8 +213,9 @@ Updating Post UserId
 	#	prepare the post to be updated
 	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
 
+	Set To Dictionary		${expected_post}		userId=${NEW_USER_ID}
 	# test call: update the post with post_id
-	Update Post UserId			${post_id}		${expected_post}		${NEW_USER_ID}
+	Update Post			${post_id}		${expected_post}
 	# expected_post got updated with "userId"=${NEW_USER_ID}
 	Verify Post Updated			${post_id}		${expected_post}
 
@@ -229,8 +230,9 @@ Updating Post Title
 	#	prepare the post to be updated
 	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
 
+	Set To Dictionary		${expected_post}		title=${NEW_TITLE}
 	# test call: update the post with post_id
-	Update Post Title				${post_id}		${expected_post}		${NEW_TITLE}
+	Update Post			${post_id}		${expected_post}
 	# expected_post got updated with "title"=${NEW_TITLE}
 	Verify Post Updated		${post_id}		${expected_post}
 
@@ -244,9 +246,10 @@ Updating Post Body
 	#	prepare the post to be updated
 	${post_id}		${expected_post} = 	Create Post		${JSON_POST}
 
-	# test call: update the post with post_id
 	# expected_post gets its body updated with NEW_BODY
-	Update Post Body				${post_id}		${expected_post}		${NEW_BODY}
+	Set To Dictionary		${expected_post}		body=${NEW_BODY}
+	# test call: update the post with post_id
+	Update Post			${post_id}		${expected_post}
 	# expected_post got updated with "body"=${NEW_BODY}
 	Verify Post Updated		${post_id}		${expected_post}
 
@@ -345,7 +348,7 @@ Attempting To Update Id In Post
 	# test call: update the post in the server
 	Update Post		${post_id}		${expected_post}
 	# Checks that "id" did not change in the post resource
-	${expected_error} = 	Set Variable	{'userId': 2, 'title': 'Modified Title', 'body': 'Modified Body', 'id': 102} != {'userId': 2, 'title': 'Modified Title', 'body': 'Modified Body', 'id': 101}
+	${expected_error} = 	Set Variable	{'userId': ${NEW_USER_ID}, 'title': '${NEW_TITLE}', 'body': '${NEW_BODY}', 'id': ${new_post_id}} != {'userId': ${NEW_USER_ID}, 'title': '${NEW_TITLE}', 'body': '${NEW_BODY}', 'id': ${post_id}}
 	Run Keyword And Expect Error	${expected_error} 		Verify Post Updated		${post_id}		${expected_post}
 	# Checks that "id" did not change in the post resource
 	Set To Dictionary		${expected_post}		id=${post_id}
@@ -391,7 +394,7 @@ Attempting To Remove All Fields Including Id In Post
 	Log		Expected post got locally modified: ${expected_post}
 	# test call: atttempt to update the post resource in the server with an empty JSON
 	Update Post		${post_id}		${expected_post}
-	Run Keyword And Expect Error		{} != {'id': 101}	Verify Post Updated		${post_id}		${expected_post}
+	Run Keyword And Expect Error		{} != {'id': ${post_id}}	Verify Post Updated		${post_id}		${expected_post}
 	# update expected_post locally
 	Set To Dictionary			${expected_post}		id=${post_id}
 	# verify that post resource has only id field with post_id value
@@ -629,7 +632,7 @@ Sorting Posts By Id In Descending Order
 Sorting Comments For A Specific Post By Id In Descending Order
 	[Documentation]		Upon GET /posts/1/comments?_sort=id&_order=desc, we should get a list of comments
 	...					belonging to post with id=1 which are sorted by comment id in descending order
-	[Tags]	read-tested 	sorting
+	[Tags]	read-tested 	sorting		run-me-only
 
 	${post_id} =			Set Variable		${1}
 	${expected_comments} =	Fetch Comments from Database   ${post_id}	id	desc
@@ -763,7 +766,7 @@ Slicing Posts With All Possible Start And End Combinations
 	...					For each call, the test case fetches expected_posts from database for the same _start and _end.
 	...					It then compares the expected_posts with observed_posts. It also calculates the expected length
 	...					of observed_posts and compares that with the observed length of observed_posts
-	[Tags]	read-tested		slicing		run-me-only
+	[Tags]	read-tested		slicing
 
 	FOR  ${start_index}		IN RANGE		${0}	${NUMBER_OF_POSTS+10}
 		FOR  ${end_index}	IN RANGE		${start_index+1}	${NUMBER_OF_POSTS +10 +1}

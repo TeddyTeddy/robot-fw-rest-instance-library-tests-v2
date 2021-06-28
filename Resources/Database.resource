@@ -1,12 +1,16 @@
 *** Settings ***
 Documentation		Implements keywords for /db endpoint
+...					Note that /db endpoint emulates a backdoor to the db contents
+...					Whether or not the user_type is Authenticated or Not,
+...					We should always be able to access the database contents for verification.
+...					That's why PRIVATE_API_KEY is always provided to /db endpoint calls.
 Library				REST		${API_BASE_URL}
 
 *** Keywords ***
 Fetch From Database
 	[Documentation]		Fetches the resources list for the given resource_name (e.g. posts)
 	[Arguments]			${resource_name}
-	GET			/db
+	GET			/db		headers={ "privateKey": "%{PRIVATE_API_KEY}" }
 	${resources_list} =		Output		response body ${resource_name}
 	[Return]		${resources_list}
 
