@@ -1,1 +1,1 @@
-node server.js db.json
+node server.js --watch db.json
