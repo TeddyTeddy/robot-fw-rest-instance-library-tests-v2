@@ -1,3 +1,4 @@
+export PRIVATE_API_KEY='1234567'
 robot --pythonpath Libraries/	-d Results/	 -o 1.xml	--report None	-t Creating\ Post				Tests/AuthorizedUser/PostTests.robot
 robot --pythonpath Libraries/	-d Results/	 -o 2.xml	--report None   -t Reading\ All\ Posts			Tests/AuthorizedUser/PostTests.robot
 robot --pythonpath Libraries/	-d Results/	 -o 3.xml	--report None   -t Reading\ Post\ By\ Id		Tests/AuthorizedUser/PostTests.robot
@@ -57,7 +58,6 @@ robot --pythonpath Libraries/	-d Results/	 -o 41.xml	--report None   -t Slicing\
 robot --pythonpath Libraries/	-d Results/	 -o 43.xml	--report None   -t Fetching\ Posts\ Ten\ Times\ With\ Different\ GTE,\ LTE\ And\ NE\ Values\ For\ Id\ Field\ And\ Different\ Like\ Values\ For\ Title\ Field		Tests/AuthorizedUser/PostTests.robot
 robot --pythonpath Libraries/	-d Results/	 -o 44.xml	--report None   -t Fetching\ All\ Posts\ With\ Their\ Comments\ Via\ Embed			Tests/AuthorizedUser/PostTests.robot
 robot --pythonpath Libraries/	-d Results/	 -o 45.xml	--report None   -t Fetching\ A\ Post\ With\ Its\ Comments\ Via\ Embed			Tests/AuthorizedUser/PostTests.robot
-
 
 rebot --merge --outputdir Results/  Results/*.xml
 rm  Results/*.xml

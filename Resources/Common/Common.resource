@@ -3,6 +3,7 @@ Documentation		add documentation here
 Library				OperatingSystem
 Library				Collections
 Library				Utilities
+Library				Process
 
 
 *** Variable ***
@@ -19,12 +20,21 @@ ${LINK_HEADER_TEMPLATE_6}	<${API_BASE_URL}posts?_page=1>; rel="first", <${API_BA
 
 
 *** Keywords ***
+Stop Server
+	Terminate All Processes
+
+Start Server
+	Start Process		node server.js --watch db.json	shell=True	alias=json-server-process	cwd=${EXECDIR}
+	Sleep 	1.5s		# allow JSONSERVER to reboot itself
+	# ${pid} = 			Get Process Id		handle=json-server-process
+	# Log To Console		\njson-server-process id:${pid}
+
 Restore Database
 	[Documentation]			By checking out the stored version of the db.json, we revert the effects of CRUD requests
 	...						in the test cases. Note that JSONSERVER listens to the changes in db.json, it re-starts
 	...						each time db.json is updated.
-	Run			git checkout ${EXECDIR}${/}db.json
-	Sleep		1.5s			# allow JSONSERVER to reboot itself after db.json file change
+	${rc} =	 				Run And Return Rc			git checkout db.json
+	Should Be Equal			${rc}		${0}
 
 Contains Sub Dictionary
 	[Documentation]		Expects resource_one as dictionary like, turns it into a Python dictionary

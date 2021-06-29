@@ -10,8 +10,9 @@ Resource			${EXECDIR}${/}Resources${/}Common${/}Common.resource
 Resource			${EXECDIR}${/}Resources${/}Posts.resource
 Resource			${EXECDIR}${/}Resources${/}Database.resource
 
-Suite Setup			Fetch Number Of Posts
-Test Teardown		Restore Database
+Suite Setup			Run Keywords	Restore Database	Start Server	Fetch Number Of Posts	Stop Server
+Test Setup			Run Keywords	Restore Database	Start Server	Check Database State
+Test Teardown		Run Keywords	Stop Server		Restore Database
 
 
 *** Variable ***
@@ -29,6 +30,10 @@ ${TAGS}						tag1 tag2 tag3
 
 
 *** Keywords ***
+Check Database State
+	${number_of_posts} = 	Get Number of Posts
+	Should Be Equal		${number_of_posts}		${100}
+
 Fetch Number Of Posts
 	# total is 100 with the current db.json, but it can change if we change the db.json
 	${NUMBER_OF_POSTS} = 	Get Number of Posts
