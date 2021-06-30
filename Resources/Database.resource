@@ -20,6 +20,13 @@ Get Number of Posts
 	${number_of_posts} =  Get Length	${posts}
 	[Return]	${number_of_posts}
 
+Fetch Random Post From Database
+	[Documentation]		Returns the a random post from the database
+	${posts} = 			Fetch From Database 	posts
+	${number_of_posts} =  Get Length	${posts}
+	${index} = 			Evaluate		random.randint(0, ${number_of_posts}-1)		modules=random
+	[Return]			${posts}[${index}]
+
 Fetch Posts From Database
 	[Documentation]		If start_index and end_index are provided, returns the posts
 	... 				from the database starting with page_start_index (inclusive, starting from zero)

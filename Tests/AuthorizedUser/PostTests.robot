@@ -10,8 +10,8 @@ Resource			${EXECDIR}${/}Resources${/}Common${/}Common.resource
 Resource			${EXECDIR}${/}Resources${/}Posts.resource
 Resource			${EXECDIR}${/}Resources${/}Database.resource
 
-Suite Setup			Run Keywords	Restore Database	Start Server	Fetch Number Of Posts	Stop Server
-Test Setup			Run Keywords	Restore Database	Start Server	Check Database State
+Suite Setup			Run Keywords	Restore Database	Re-Start Server		Fetch Number Of Posts	Get Random Post From Database	Stop Server
+Test Setup			Run Keywords	Restore Database	Re-Start Server		Check Database State
 Test Teardown		Run Keywords	Stop Server		Restore Database
 
 
@@ -23,11 +23,6 @@ ${NEW_USER_ID}				${2}
 ${NEW_TITLE}				Modified Title
 ${NEW_BODY}					Modified Body
 ${TAGS}						tag1 tag2 tag3
-&{EXPECTED_POST_WITH_ID_5}			userId=${1}
-...    								id=${5}
-...    								title=nesciunt quas odio
-...    								body=repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque
-
 
 *** Keywords ***
 Check Database State
@@ -39,6 +34,9 @@ Fetch Number Of Posts
 	${NUMBER_OF_POSTS} = 	Get Number of Posts
 	Set Suite Variable		${NUMBER_OF_POSTS}
 
+Get Random Post From Database
+	&{EXPECTED_POST} = 		Fetch Random Post From Database
+	Set Suite Variable		${EXPECTED_POST}
 
 Test Getting Posts With Pagination
 	[Documentation]			limit stands for the number of posts in a given page
@@ -132,81 +130,81 @@ Reading Post By Id
 	[Documentation]			Reads an existing post from the server. Compares the post read with the expected post
 	[Tags]		read-tested
 	# test call
-	${observed_post} = 		Get Post With Id	${5}
+	${observed_post} = 		Get Post With Id	${EXPECTED_POST}[id]
 	# verify
-	Should Be Equal		${observed_post}		${EXPECTED_POST_WITH_ID_5}
+	Should Be Equal		${observed_post}		${EXPECTED_POST}
 
 Reading Post By Filtering Id
 	[Documentation]			Reads posts by providing a filter containing a id value
 	...						Expects that the returned post list contains only one post
 	...						Expects that the post matches with the expected post
 	[Tags]		read-tested
-	${filter} = 			Set Variable		?id=${EXPECTED_POST_WITH_ID_5}[id]
+	${filter} = 			Set Variable		?id=${EXPECTED_POST}[id]
 	# test call
 	${post_list} = 			Get Posts With Filter	${filter}
 	# verify
 	${observed_length} = 	Get Length		${post_list}
 	Should Be Equal		${1}	${observed_length}
-	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+	Should Be Equal		${EXPECTED_POST}		${post_list}[0]
 
 Reading Post By Filtering Title
 	[Documentation]			Reads posts by providing a filter containing a title value
 	...						Expects that the returned post list contains only one post
 	...						Expects that the post matches with the expected post
 	[Tags]		read-tested
-	${filter} = 			Set Variable		?title=${EXPECTED_POST_WITH_ID_5}[title]
+	${filter} = 			Set Variable		?title=${EXPECTED_POST}[title]
 	# test call
 	${post_list} = 			Get Posts With Filter	${filter}
 	# verify
 	${observed_length} = 	Get Length		${post_list}
 	Should Be Equal		${1}	${observed_length}
-	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+	Should Be Equal		${EXPECTED_POST}		${post_list}[0]
 
 Reading Post By Filtering Id & Title
 	[Documentation]			Reads posts by providing a filter containing an id value and a title value
 	...						Expects that the returned post list contains only one post
 	...						Expects that the post matches with the expected post
 	[Tags]		read-tested
-	${filter} = 			Set Variable		?id=${EXPECTED_POST_WITH_ID_5}[id]&title=${EXPECTED_POST_WITH_ID_5}[title]
+	${filter} = 			Set Variable		?id=${EXPECTED_POST}[id]&title=${EXPECTED_POST}[title]
 	# test call
 	${post_list} = 			Get Posts With Filter	${filter}
 	# verify
 	${observed_length} = 	Get Length		${post_list}
 	Should Be Equal		${1}	${observed_length}
-	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+	Should Be Equal		${EXPECTED_POST}		${post_list}[0]
 
 Reading Post By Filtering UserId And Title
 	[Documentation]			Reads posts by providing a filter containing a userId value and a title value
 	...						Expects that the returned post list contains only one post
 	...						Expects that the post matches with the expected post
 	[Tags]		read-tested
-	${filter} = 			Set Variable		?userId=${EXPECTED_POST_WITH_ID_5}[userId]&title=${EXPECTED_POST_WITH_ID_5}[title]
+	${filter} = 			Set Variable		?userId=${EXPECTED_POST}[userId]&title=${EXPECTED_POST}[title]
 	${post_list} = 			Get Posts With Filter	${filter}
 	${observed_length} = 	Get Length		${post_list}
 	Should Be Equal		${1}	${observed_length}
-	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+	Should Be Equal		${EXPECTED_POST}		${post_list}[0]
 
 Reading Post By Filtering UserId, Id And Title
 	[Documentation]			Reads posts by providing a filter containing a userId value, id value and a title value
 	...						Expects that the returned post list contains only one post
 	...						Expects that the post matches with the expected post
 	[Tags]		read-tested
-	${filter} = 			Set Variable		?userId=${EXPECTED_POST_WITH_ID_5}[userId]&id=${EXPECTED_POST_WITH_ID_5}[id]&title=${EXPECTED_POST_WITH_ID_5}[title]
+	${filter} = 			Set Variable		?userId=${EXPECTED_POST}[userId]&id=${EXPECTED_POST}[id]&title=${EXPECTED_POST}[title]
 	${post_list} = 			Get Posts With Filter	${filter}
 	${observed_length} = 	Get Length		${post_list}
 	Should Be Equal		${1}	${observed_length}
-	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+	Should Be Equal		${EXPECTED_POST}		${post_list}[0]
 
 Reading Post By Filtering UserId And Id
 	[Documentation]			Reads posts by providing a filter containing a userId value and an id value
 	...						Expects that the returned post list contains only one post
 	...						Expects that the post matches with the expected post
 	[Tags]		read-tested
-	${filter} = 			Set Variable		?userId=${EXPECTED_POST_WITH_ID_5}[userId]&id=${EXPECTED_POST_WITH_ID_5}[id]
+	${filter} = 			Set Variable		?userId=${EXPECTED_POST}[userId]&id=${EXPECTED_POST}[id]
 	${post_list} = 			Get Posts With Filter	${filter}
 	${observed_length} = 	Get Length		${post_list}
 	Should Be Equal		${1}	${observed_length}
-	Should Be Equal		${EXPECTED_POST_WITH_ID_5}		${post_list}[0]
+	Should Be Equal		${EXPECTED_POST}		${post_list}[0]
 
 Updating Post UserId
 	[Documentation]			Creates a post with JSON_POST (1) and updates its "userId" locally

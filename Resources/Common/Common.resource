@@ -23,7 +23,15 @@ ${LINK_HEADER_TEMPLATE_6}	<${API_BASE_URL}posts?_page=1>; rel="first", <${API_BA
 Stop Server
 	Terminate All Processes
 
-Start Server
+Re-Start Server
+	${rc}	${pids} =		Run And Return Rc And Output	pgrep -f 'node server.js --watch db.json'
+	${is_not_empty} =		Evaluate	$pids!=''
+	IF	${is_not_empty}
+		${pids} = 	Evaluate	$pids.split('\\n')
+		FOR  ${pid}		IN		@{pids}
+			Run		kill ${pid}
+		END
+	END
 	Start Process		node server.js --watch db.json	shell=True	alias=json-server-process	cwd=${EXECDIR}
 	Sleep 	1.5s		# allow JSONSERVER to reboot itself
 	# ${pid} = 			Get Process Id		handle=json-server-process
