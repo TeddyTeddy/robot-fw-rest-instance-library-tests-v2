@@ -37,7 +37,6 @@ Fetch Posts From Database
 	${is_range_provided} = 		Evaluate	$start_index!='' and $end_index!=''
 	IF	${is_range_provided}
 		${ranged_posts} =		Evaluate		$all_posts[$start_index:$end_index]
-		Free Memory		${all_posts}
 		Return From Keyword		${ranged_posts}
 	END
 	[Return]	${all_posts}
@@ -64,7 +63,6 @@ Fetch Comments from Database
 	# comments is modified in place
 	Filter In Resource List By 		${comments}		postId		${post_id}
 	${sorted_comments} =		Sort Resource List		${comments}	 	${field}	${order}
-	Free Memory		${comments}
 	[Return]	${sorted_comments}
 
 Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
@@ -74,9 +72,7 @@ Fetch Ordered Comments From Database For A Given PostId Ordered By Given Fields
 	# comments is modified in place
 	Filter In Resource List By 		${comments}		postId		${post_id}
 	${phase_1_sorted_comments} =		Sort Resource List		${comments}	 	${field_1}	${order_1}
-	Free Memory		${comments}
 	${final_sorted_comments} =		Sort Resource List		${phase_1_sorted_comments}	 	${field_2}	${order_2}
-	Free Memory		${phase_1_sorted_comments}
 	[Return]			${final_sorted_comments}
 
 Fetch A Post From Database Matching
@@ -87,7 +83,6 @@ Fetch A Post From Database Matching
 	FOR		${post}		IN 		@{posts}
 		${is_match} = 	Evaluate	$post[$field_name] == $field_value
 		IF  ${is_match}
-			Free Memory		${posts}
 			Return From Keyword		${post}
 		END
 	END
@@ -106,5 +101,5 @@ Add Comments To Post
 		END
 	END
 	Set To Dictionary		${post}		comments=${posts_comments}
-	Free Memory		${all_comments}
+
 

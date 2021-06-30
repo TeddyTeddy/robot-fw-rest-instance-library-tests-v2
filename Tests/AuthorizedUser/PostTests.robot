@@ -795,8 +795,6 @@ Slicing Posts With All Possible Start And End Combinations
 			END
 			Should Be Equal		${expected_length}		${observed_length}
 
-			Free Memory		${expected_posts}
-			Free Memory		${observed_posts}
 		END
 		Reload Library		REST
 	END
@@ -872,8 +870,7 @@ Slicing Posts With All Possible Start And Limit Combinations
 			END
 			Should Be Equal		${expected_length}		${observed_length}
 
-			Free Memory		${expected_posts}
-			Free Memory		${observed_posts}
+
 			Reload Library		REST
 		END
 	END
@@ -953,9 +950,4 @@ Fetching A Post With Its Comments Via Embed
 		# (2) test call
 		${observed_post} = 			Get A Post With Its Comments	${id}
 		Should Be Equal				${expected_post}		${observed_post}
-		# Freeing memory via del command in Python does not help to keep the memory usage in check
-		# whether the code below is commented in or out, the memory usage keeps growing steadily.
-		# Free Memory		${expected_post}
-		# Free Memory		${observed_post}
-		# Log		${expected_post}
 	END
