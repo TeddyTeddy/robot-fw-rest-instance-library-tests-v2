@@ -22,7 +22,7 @@ Now you are ready to run the server (in Terminal 2). You have 2 options;
    - running the server with authentication
    - running the server without authentication
 
-# Running the server with authentication
+# Running the server without authentication
 6. In terminal 2, at the project root; ./run_server_with_authentication
 
 At this point, you should have a JSON REST API server running locally on your machine
@@ -45,7 +45,7 @@ with the following output:
 
   Home
   http://localhost:3000
-# Running the server without authentication
+# Running the server with authentication
 6. In terminal 2, at the project root; ./run_server_without_authentication
 
  JSON Server is running with authentication enabled
