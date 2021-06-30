@@ -1,1 +1,2 @@
+export PRIVATE_API_KEY='1234567'
 robot --pythonpath Libraries/	--exclude exclude-me	--include run-me-only	-d Results/		Tests/
