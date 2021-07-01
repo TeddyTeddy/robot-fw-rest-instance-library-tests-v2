@@ -33,7 +33,7 @@ Re-Start Server
 		END
 	END
 	Start Process		node server.js --watch db.json	shell=True	alias=json-server-process	cwd=${EXECDIR}
-	Sleep 	1.5s		# allow JSONSERVER to reboot itself
+	Sleep 	1s			# allow JSONSERVER to reboot itself
 	# ${pid} = 			Get Process Id		handle=json-server-process
 	# Log To Console		\njson-server-process id:${pid}
 
