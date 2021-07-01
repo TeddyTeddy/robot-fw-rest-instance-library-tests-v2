@@ -15,9 +15,9 @@ robot --pythonpath Libraries/	-d Results/	 -o 10.xml	--report None   -t Updating
 robot --pythonpath Libraries/	-d Results/	 -o 11.xml	--report None   -t Updating\ Post\ Title			Tests/AuthorizedUser/PostTests.robot
 robot --pythonpath Libraries/	-d Results/	 -o 12.xml	--report None   -t Updating\ Post\ Body			Tests/AuthorizedUser/PostTests.robot
 
-robot --pythonpath Libraries/	-d Results/	 -o 13.xml	--report None   -t Updating\ Post\ UserId\ &\ Title			Tests/AuthorizedUser/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 14.xml	--report None   -t Updating\ Post\ Title\ &\ Body				Tests/AuthorizedUser/PostTests.robot
-robot --pythonpath Libraries/	-d Results/	 -o 15.xml	--report None   -t Updating\ Post\ UserId\ &\ Body			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 13.xml	--report None   -t Updating\ Post\ UserId\ \&\ Title			Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 14.xml	--report None   -t Updating\ Post\ Title\ \&\ Body				Tests/AuthorizedUser/PostTests.robot
+robot --pythonpath Libraries/	-d Results/	 -o 15.xml	--report None   -t Updating\ Post\ UserId\ \&\ Body			Tests/AuthorizedUser/PostTests.robot
 
 robot --pythonpath Libraries/	-d Results/	 -o 16.xml	--report None   -t Updating\ All\ Fields\ Except\ Id\ In\ Post			Tests/AuthorizedUser/PostTests.robot
 robot --pythonpath Libraries/	-d Results/	 -o 17.xml	--report None   -t Attempting\ To\ Update\ Id\ In\ Post				Tests/AuthorizedUser/PostTests.robot
@@ -51,9 +51,9 @@ robot --pythonpath Libraries/	-d Results/	 -o 37.xml	--report None   -t Sorting\
 robot --pythonpath Libraries/	-d Results/	 -o 38.xml	--report None   -t Sorting\ Comments\ For\ A\ Specific\ Post\ By\ Id\ \(Desc\)\ And\ By\ Email\ \(Desc\)			Tests/AuthorizedUser/PostTests.robot
 robot --pythonpath Libraries/	-d Results/	 -o 39.xml	--report None   -t Slicing\ Posts\ Ten\ Times\ With\ Different\ Start\ And\ End\ Values			Tests/AuthorizedUser/PostTests.robot
 
-# robot --pythonpath Libraries/	-d Results/	 -o 40.xml	--report None   -t Slicing\ Posts\ With\ All\ Possible\ Start\ And\ End\ Combinations		Tests/AuthorizedUser/PostTests.robot
+# robot --pythonpath Libraries/	-d Results/	 -o 40.xml	--report None  --loglevel NONE  -t Slicing\ Posts\ With\ All\ Possible\ Start\ And\ End\ Combinations		Tests/AuthorizedUser/PostTests.robot
 robot --pythonpath Libraries/	-d Results/	 -o 41.xml	--report None   -t Slicing\ Posts\ Ten\ Times\ With\ Different\ Start\ And\ Limit\ Values			Tests/AuthorizedUser/PostTests.robot
-# robot --pythonpath Libraries/	-d Results/	 -o 42.xml	--report None   -t Slicing\ Posts\ With\ All\ Possible\ Start\ And\ Limit\ Combinations			Tests/AuthorizedUser/PostTests.robot
+# robot --pythonpath Libraries/	-d Results/	 -o 42.xml	--report None   --loglevel NONE  -t Slicing\ Posts\ With\ All\ Possible\ Start\ And\ Limit\ Combinations			Tests/AuthorizedUser/PostTests.robot
 
 robot --pythonpath Libraries/	-d Results/	 -o 43.xml	--report None   -t Fetching\ Posts\ Ten\ Times\ With\ Different\ GTE,\ LTE\ And\ NE\ Values\ For\ Id\ Field\ And\ Different\ Like\ Values\ For\ Title\ Field		Tests/AuthorizedUser/PostTests.robot
 robot --pythonpath Libraries/	-d Results/	 -o 44.xml	--report None   -t Fetching\ All\ Posts\ With\ Their\ Comments\ Via\ Embed			Tests/AuthorizedUser/PostTests.robot
